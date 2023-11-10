@@ -17,10 +17,10 @@
 #define IS_SEMICN   10
 
 
-std::string TKs[13][2] = { {"const", "CONSTTK"}, {"int", "INTTK"} , {"char", "CHARTK"},
+std::string TKs[14][2] = { {"const", "CONSTTK"}, {"int", "INTTK"} , {"char", "CHARTK"},
                       {"void", "VOIDTK"}, {"main", "MAINTK"}, {"if", "IFTK"}, {"else", "ELSETK"},
                       {"do", "DOTK"}, {"while", "WHILETK"}, {"for", "FORTK"}, {"scanf", "SCANFTK"},
-                      {"printf", "PRINTFTK"}, {"return", "RETURNTK"} };
+                      {"print", "PRINTTK"}, {"return", "RETURNTK"}, {"func", "FUNCTIONTK"} };
 
 std::string OPERATORs[4][2] = { {"+", "PLUS"}, {"-", "MINU"}, {"*", "MULT"}, {"/", "DIV"} };
 
