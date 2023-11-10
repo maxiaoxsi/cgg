@@ -1,8 +1,16 @@
 #include <iostream>
+#include "constant.h"
+#include "lexAnalyser.h"
 
-int main() {
+int main(int argc, char **argv) {
     std::cout << "awesome brother chao!" << std::endl;
-    int a;
-    std::cin >> a;
+    std::string fileDir;
+    if (argc == 1) {
+        fileDir = "./main.cpp";
+    }
+    else if (argc == 2) {
+        fileDir = argv[1];
+    }
+    LexAnalyser pra1(fileDir);
     return 0;
 }
