@@ -1,5 +1,4 @@
 #include <iostream>
-#include "constant.h"
 #include "lexAnalyser.h"
 
 int main(int argc, char **argv) {
@@ -11,7 +10,7 @@ int main(int argc, char **argv) {
     else if (argc == 2) {
         fileDir = argv[1];
     }
-    LexAnalyser pra1(fileDir);
-    pra1.analyse();
+    LexAnalyser test1(fileDir);
+    test1.analyse();
     return 0;
 }
