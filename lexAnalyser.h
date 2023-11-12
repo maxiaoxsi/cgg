@@ -1,27 +1,25 @@
 //
 // Created by maxiaoxsi on 2023/11/10.
 //
-#include<map>
-
 #ifndef CGG_LEXANALYSER_H
 #define CGG_LEXANALYSER_H
 
+#include<iostream>
+#include<fstream>
 #define MAXLINE 1024
-#define IS_IDENFR	1
-#define IS_NUMBER	2
-#define IS_CHAR		3
-#define IS_STRING	4
-#define IS_OPERATOR	5
-#define IS_COMPARE	6
-#define IS_BRAKET   7
-#define IS_ASSIGN   8
-#define IS_COMMA    9
-#define IS_SEMICN   10
 
 class LexAnalyser{
 public:
-    explicit LexAnalyser(const std::string& file) {}
-    void analyse() {}
+    explicit LexAnalyser(std::string& file);
+    void analyse();
+private:
+    std::string fileDir;
+    std::ifstream ifs;
+    std::string token;
+    char ch;
+    void getCh();
+    int getToken();
+    bool isBlank();
 };
 
 #endif
