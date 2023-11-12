@@ -1,7 +1,10 @@
 #include <iostream>
 #include "lexAnalyser.h"
 
+#include<map>
+
 int main(int argc, char **argv) {
+    std::cout << isalnum('(') << std::endl;
     std::cout << "awesome brother chao!" << std::endl;
     std::string fileDir;
     if (argc == 1) {
@@ -10,7 +13,8 @@ int main(int argc, char **argv) {
     else if (argc == 2) {
         fileDir = argv[1];
     }
-    LexAnalyser test1(fileDir);
-    test1.analyse();
+    LexAnalyser testAnalyser(fileDir);
+    testAnalyser.analyse();
+    std::cout << "awesome brother chao!" << std::endl;
     return 0;
 }

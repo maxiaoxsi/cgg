@@ -7,4 +7,6 @@ add_executable(cgg main.cpp
         lexAnalyser.h
         lexAnalyser.cpp
         lexAnalyser.cpp
+        parser.cpp
+        parser.h
 )
