@@ -4,7 +4,6 @@
 #include<map>
 
 int main(int argc, char **argv) {
-    std::cout << isalnum('(') << std::endl;
     std::cout << "awesome brother chao!" << std::endl;
     std::string fileDir;
     if (argc == 1) {
