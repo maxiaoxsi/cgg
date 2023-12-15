@@ -1,7 +1,8 @@
 #include <iostream>
-#include "lexAnalyser.h"
-
 #include<map>
+#include "dataExplorer.h"
+#include "lexAnalyser.h"
+#include "parser.h"
 
 int main(int argc, char **argv) {
     std::cout << "awesome brother chao!" << std::endl;
@@ -14,6 +15,9 @@ int main(int argc, char **argv) {
     }
     LexAnalyser testAnalyser(fileDir);
     testAnalyser.analyse();
-    std::cout << "awesome brother chao!" << std::endl;
+    Parser testParser;
+    testParser.procedure();
+    std::cout << "----------------------------------" << std::endl;
+    root.printTree();
     return 0;
 }

@@ -6,16 +6,8 @@
 #include<iostream>
 #include<fstream>
 #include<vector>
+#include "dataExplorer.h"
 #define MAXLINE 1024
-
-enum typeId {
-    CONSTTK, INTTK, CHARTK, VOIDTK, MAINTK, IFTK, ELSETK, DOTK, WHILETK, FORTK, SCANFTK, PRINTFTK, RETURNTK, FUNCTK, //tks
-    IDENFR, INTCON, CHARCON, STRCON,
-    PLUS, MINU, MULT, DIV, // operators
-    LSS, LEQ, GRE, GEQ, EQL, NEQ, // compares
-    ASSIGN, SEMICN, COMMA,
-    LPARENT, RPARENT, LBRACK, RBRACK, LBRACE, RBRACE //brackets
-};
 
 class LexAnalyser{
 public:
@@ -24,6 +16,7 @@ public:
 private:
     std::string _fileDir;
     std::ifstream _ifs;
+    std::ofstream _lexOutfile;
     std::string _token;
     std::string _line;
     typeId _tokenType;

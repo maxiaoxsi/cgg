@@ -6,9 +6,9 @@
 #include<map>
 #include<cctype>
 #include "lexAnalyser.h"
+#include "dataExplorer.h"
 
-
-enum typeId tokenType;
+enum typeId _tokenType;
 
 std::map<std::string, typeId> reservedWordMap =
         {{"const", CONSTTK}, {"int", INTTK}, {"char", CHARTK}, {"void", VOIDTK},
@@ -17,7 +17,7 @@ std::map<std::string, typeId> reservedWordMap =
          {"printf", PRINTFTK}, {"return", RETURNTK}, {"func", FUNCTK}};
 
 std::map<char, typeId> operatorMap =
-        {{'+', PLUS}, {'-', MINU}, {'*', MULT}, {'/', DIV} };
+        {{'+', PLUS}, {'-', MINU}, {'*', MULT}, {'/', DIV} , {'%', MOD}};
 
 std::map<char, typeId> bracketMap =
         {{'(', LPARENT}, {')', RPARENT} ,{'[', LBRACK} ,
@@ -33,9 +33,12 @@ LexAnalyser::LexAnalyser(std::string& fileDir) {
 void LexAnalyser::analyse() {
     _ifs.open(_fileDir, std::ios::in);
     if (!_ifs.is_open()) {
-        std::cout << "fail to open!\n";
-        perror("fail to open!\n");
+        perror("fail to open input file!\n");
         return;
+    }
+    _lexOutfile.open("lexical.txt");
+    if (!_lexOutfile.is_open()) {
+        perror("fail to open lexical output file!\n");
     }
     _curPos = 0;
     _curLine = 0;
@@ -269,9 +272,10 @@ void LexAnalyser::putToken(typeId type) {
     }
 }
 
-void LexAnalyser::putToken(const std::string& type, typeId typeEnum) {
-    std::cout << type << " " << _token << std::endl;
-    //std::cout << _curPos << std::endl;
+void LexAnalyser::putToken(const std::string& typeStr, typeId typeEnum) {
+    _lexOutfile << typeStr << " " << _token << std::endl;
+    LexToken tempToken(typeEnum, typeStr, _token, _curLine);
+    tokenList.push_back(tempToken);
 }
 
 bool LexAnalyser::isLss() const {

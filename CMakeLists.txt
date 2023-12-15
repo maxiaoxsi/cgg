@@ -9,4 +9,10 @@ add_executable(cgg main.cpp
         lexAnalyser.cpp
         parser.cpp
         parser.h
+        dataExplorer.cpp
+        dataExplorer.h
+        parser.constDecl.cpp
+        parser.varDecl.cpp
+        parser.exp.cpp
+        parser.funcDef.cpp
 )
