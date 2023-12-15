@@ -9,7 +9,8 @@
 #include <vector>
 
 enum typeId {
-    CONSTTK, INTTK, CHARTK, VOIDTK, MAINTK, IFTK, ELSETK, DOTK, WHILETK, FORTK, SCANFTK, PRINTFTK, RETURNTK, FUNCTK, //tks
+    CONSTTK, INTTK, CHARTK, VOIDTK, MAINTK, IFTK, ELSETK, DOTK, WHILETK, FORTK, SCANFTK,
+    PRINTFTK, RETURNTK, FUNCTK, BREAKTK, CONTINUETK, //tks
     IDENFR, INTCON, CHARCON, STRCON,
     PLUS, MINU, MULT, DIV, MOD,// operators
     LSS, LEQ, GRE, GEQ, EQL, NEQ, // compares
@@ -22,7 +23,6 @@ public:
     LexToken(typeId typeEnum, const std::string &typeStr, const std::string &tokenCon, int line);
     LexToken();
     void println();
-    typeId symbol();
     std::string typeStr();
     std::string tokenCon();
     bool isLParent();
@@ -54,6 +54,15 @@ public:
     bool isCharCon();
     bool isNumber();
     bool isMainTk();
+    bool isIfTk();
+    bool isWhileTk();
+    bool isBreakTk();
+    bool isContinueTk();
+    bool isReturnTk();
+    bool isPrintfTk();
+    bool isScanfTk();
+    bool isElseTk();
+    typeId typeEnum();
 
 private:
     std::string _tokenCon;

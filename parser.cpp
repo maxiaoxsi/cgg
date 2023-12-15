@@ -29,6 +29,7 @@ bool Parser::procedure() {
     while(true) {
         if (_token.isConstTk()) {
             setIdx(_idx - 1);
+            // <ConstDecl>
             SyntaxNode constDeclNode = isConstDecl(true);
             if (constDeclNode.isNull()) {
                 return false;
@@ -39,6 +40,7 @@ bool Parser::procedure() {
         }
         if (_token.isBType()) {
             setIdx(_idx - 1);
+            // <VarDecl>
             SyntaxNode varDeclNode = isVarDecl(true);
             if (varDeclNode.isNull()) {
                 return false;
@@ -49,13 +51,16 @@ bool Parser::procedure() {
         }
         if (_token.isFuncTk()) {
             // is main?
-            setIdx(_idx + 1);
+            if (!setIdx(_idx + 1)) {
+                return false;
+            }
             if (_token.isMainTk()) {
                 setIdx(_idx - 2);
                 break;
             }
             else {
                 setIdx(_idx - 2);
+                // <FuncDef>
                 SyntaxNode funcDefNode = isFuncDef();
                 if (funcDefNode.isNull()) {
                     return false;
@@ -74,7 +79,7 @@ bool Parser::procedure() {
 
 
 /*
- * <BType> → 'int'
+ * <BType> → 'int' | 'char'
  */
 SyntaxNode Parser::isBType() {
     SyntaxNode node("<BType>");
@@ -91,7 +96,7 @@ SyntaxNode Parser::isBType() {
 }
 
 /*
- * lex
+ * lex IDENFR>
  */
 SyntaxNode Parser::isIdent() {
     SyntaxNode node("<Ident>");
@@ -111,11 +116,13 @@ SyntaxNode Parser::isIdent() {
 SyntaxNode Parser::isFuncRParams() {
     SyntaxNode node("<FuncRParams");
     do {
+        // <Exp>
         SyntaxNode expNode = isExp();
         if (expNode.isNull()) {
             return {};
         }
         node.addChild(expNode);
+        // is token comma
         if (!setIdx(_idx + 1)) {
             return {};
         }
@@ -124,22 +131,86 @@ SyntaxNode Parser::isFuncRParams() {
     return node;
 }
 
-
-
-
-
-
-
-
-
-
-
-SyntaxNode Parser::isFuncDecl() {
-    return {};
+/*
+ * <Block> → '{' { <BlockItem> } '}'
+ */
+SyntaxNode Parser::isBlock() {
+    SyntaxNode node("<Block>");
+    // '{'
+    if (!isLBrace()) {
+        return {};
+    }
+    // is token '}'
+    if (!setIdx(_idx + 1)) {
+        return {};
+    }
+    while (!_token.isRBrace()) {
+        setIdx(_idx - 1);
+        SyntaxNode blockItemNode = isBlockItem();
+        if (blockItemNode.isNull()) {
+            return {};
+        }
+        node.addChild(blockItemNode);
+        if (!setIdx(_idx + 1)) {
+            return {};
+        }
+    }
+    if (_token.isRBrace()) {
+        return {};
+    }
+    return node;
 }
 
-SyntaxNode Parser::isMainFuncDecl() {
-    return {};
+/*
+ * <BlockItem> → <ConstDecl> | <VarDecl> | <Stmt>
+ */
+SyntaxNode Parser::isBlockItem() {
+    SyntaxNode node("<BlockItem>");
+    // is token CONSTTK or <BType> or other
+    if (!setIdx(_idx + 1)) {
+        return {};
+    }
+    if (_token.isConstTk()) {
+        setIdx(_idx - 1);
+        SyntaxNode constDeclNode = isConstDecl(false);
+        if (constDeclNode.isNull()) {
+            return {};
+        }
+        node.addChild(constDeclNode);
+    }
+    else if (_token.isBType()) {
+        setIdx(_idx - 1);
+        SyntaxNode varDeclNode = isVarDecl(false);
+        if (varDeclNode.isNull()) {
+            return {};
+        }
+        node.addChild(varDeclNode);
+    }
+    else {
+        setIdx(_idx - 1);
+        SyntaxNode stmtNode = isStmt();
+        if (stmtNode.isNull()) {
+            return {};
+        }
+        node.addChild(stmtNode);
+    }
+    return node;
 }
+
+/*
+ * <Cond> → <LOrExp>
+ */
+SyntaxNode Parser::isCond() {
+    SyntaxNode node("<Cond>");
+    // <LOrExp>
+    SyntaxNode lOrExpNode = isLOrExp();
+    if (lOrExpNode.isNull()) {
+        return {};
+    }
+    node.addChild(lOrExpNode);
+    return node;
+}
+
+
 
 

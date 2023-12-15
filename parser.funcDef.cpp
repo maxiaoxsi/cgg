@@ -10,10 +10,7 @@
 SyntaxNode Parser::isFuncDef() {
     SyntaxNode node("<FuncDef>");
     // 'func'
-    if (!setIdx(_idx + 1)) {
-        return {};
-    }
-    if (!_token.isFuncTk()) {
+    if (!isFuncTk()) {
         return {};
     }
     // <Ident>
@@ -23,10 +20,7 @@ SyntaxNode Parser::isFuncDef() {
     }
     node.addChild(identNode);
     // '('
-    if (!setIdx(_idx + 1)) {
-        return {};
-    }
-    if (!_token.isLParent()) {
+    if (!isLParent()) {
         return {};
     }
     // [FuncFParams]
@@ -35,7 +29,7 @@ SyntaxNode Parser::isFuncDef() {
     }
     if (!_token.isRParent()) {
         setIdx(_idx - 1);
-        SyntaxNode funcFParamsNode = isFuncFParas();
+        SyntaxNode funcFParamsNode = isFuncFParams();
         if (funcFParamsNode.isNull()) {
             return {};
         }
@@ -60,5 +54,199 @@ SyntaxNode Parser::isFuncDef() {
         return {};
     }
     node.addChild(blockNode);
+    return node;
+}
+
+/*
+ * <FuncFParams> → <FuncFParam> { ',' <FuncFParam> }
+ */
+SyntaxNode Parser::isFuncFParams() {
+    SyntaxNode node("<FuncFParams>");
+    do {
+        // <FuncFParam>
+        SyntaxNode FuncFParam = isFuncFParam();
+        if (FuncFParam.isNull()) {
+            return {};
+        }
+        node.addChild(FuncFParam);
+        // if ','
+        if (!setIdx(_idx + 1)) {
+            return {};
+        }
+    } while(_token.isComma());
+    setIdx(_idx - 1);
+    return node;
+}
+
+/*
+ * <FuncFParam> → <Ident> <FuncFVarParam> | <Ident> <FuncFArrayParam> | <Ident> <FuncFFuncParam>
+ */
+SyntaxNode Parser::isFuncFParam() {
+    SyntaxNode node("<FuncFParam>");
+    // <Ident>
+    SyntaxNode identNode = isIdent();
+    if (identNode.isNull()) {
+        return {};
+    }
+    node.addChild(identNode);
+    // is token '[', 'BType' or 'func'
+    if (!setIdx(_idx + 1)) {
+        return {};
+    }
+    if (_token.isBType()) {
+        setIdx(_idx) - 1;
+        // <FuncFVarParam>
+        SyntaxNode funcFVarParamNode = isFuncFVarParam();
+        if (funcFVarParamNode.isNull()) {
+            return {};
+        }
+        node.addChild(funcFVarParamNode);
+    }
+    else if (_token.isLParent()) {
+        setIdx(_idx - 1);
+        // <FuncFArrayParam>
+        SyntaxNode funcFArrayParamNode = isFuncFArrayParam();
+        if (funcFArrayParamNode.isNull()) {
+            return {};
+        }
+        node.addChild(funcFArrayParamNode);
+    }
+    else {
+        // 'func'
+        setIdx(_idx - 1);
+        // <FuncFFuncParam>
+        SyntaxNode funcFFuncParamNode = isFuncFFuncParam();
+        if (funcFFuncParamNode.isNull()) {
+            return {};
+        }
+        node.addChild(funcFFuncParamNode);
+    }
+    return node;
+}
+
+/*
+ * <FuncFVarParam> → <BType>
+ */
+
+SyntaxNode Parser::isFuncFVarParam() {
+    SyntaxNode node("<FuncFParamVar>");
+    // <BType>
+    SyntaxNode bTypeNode = isBType();
+    if (bTypeNode.isNull()) {
+        return {};
+    }
+    node.addChild(bTypeNode);
+    return node;
+}
+
+/*
+ * <FuncFArrayParam> →  '[' ']' { '[' ConstExp ']' } <BType>
+ */
+
+SyntaxNode Parser::isFuncFArrayParam() {
+    SyntaxNode node("<FuncFArrayParam>");
+    // '['
+    if (!isLBrack()) {
+        return {};
+    }
+    // ']'
+    if (!isRBrack()) {
+        return {};
+    }
+    // is token '['
+    if (!setIdx(_idx + 1)) {
+        return {};
+    }
+    while (_token.isLBrack()) {
+        // ConstExp
+        SyntaxNode  constExpNode = isConstExp();
+        if (constExpNode.isNull()) {
+            return {};
+        }
+        node.addChild(constExpNode);
+        if (!isRBrack()) {
+            return {};
+        }
+        // is token '['
+        if (!setIdx(_idx + 1)) {
+            return {};
+        }
+    }
+    setIdx(_idx - 1);
+    // <BType>
+    SyntaxNode bTypeNode = isBType();
+    if (bTypeNode.isNull()) {
+        return {};
+    }
+    node.addChild(bTypeNode);
+    return node;
+}
+
+
+/*
+ * <FuncFFuncParam> → 'func' '(' {<BType>} ')' <BType>
+ */
+
+SyntaxNode Parser::isFuncFFuncParam() {
+    SyntaxNode node("<FuncFFuncParam>");
+    // 'func'
+    if (!isFuncTk()) {
+        return {};
+    }
+    // '('
+    if (!isLParent()) {
+        return {};
+    }
+    // is token <BType>
+    if (!setIdx(_idx + 1)) {
+        return {};
+    }
+    while (_token.isBType()) {
+        setIdx(_idx - 1);
+        // <BType>
+        SyntaxNode bTypeNode = isBType();
+        if (bTypeNode.isNull()) {
+            return {};
+        }
+        node.addChild(bTypeNode);
+        if (!setIdx(_idx + 1)) {
+            return {};
+        }
+    }
+    setIdx(_idx - 1);
+    // ')'
+    if (!isRParent()) {
+        return {};
+    }
+    // <BType>
+    SyntaxNode bTypeNode = isBType();
+    if (bTypeNode.isNull()) {
+        return {};
+    }
+    node.addChild(bTypeNode);
+    return node;
+}
+
+/*
+ * FuncType → [<BType>]
+ */
+SyntaxNode Parser::isFuncType() {
+    SyntaxNode node("<FuncType>");
+    // is token <BType>
+    if (!setIdx(_idx + 1)) {
+        return {};
+    }
+    if (_token.isBType()) {
+        setIdx(_idx - 1);
+        // <BType>
+        SyntaxNode  bTypeNode = isBType();
+        if (bTypeNode.isNull()) {
+            return {};
+        }
+        node.addChild(bTypeNode);
+    }
+    else {
+        setIdx(_idx - 1);
+    }
     return node;
 }

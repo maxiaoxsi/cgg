@@ -24,7 +24,7 @@ void LexToken::println() {
     std::cout << _line << ":" << _typeStr << " " << _tokenCon << std::endl;
 }
 
-typeId LexToken::symbol() {
+typeId LexToken::typeEnum() {
     return _typeEnum;
 }
 
@@ -150,6 +150,38 @@ bool LexToken::isNumber() {
 
 bool LexToken::isMainTk() {
     return _typeEnum == MAINTK;
+}
+
+bool LexToken::isIfTk() {
+    return _typeEnum == IFTK;
+}
+
+bool LexToken::isWhileTk() {
+    return _typeEnum == WHILETK;
+}
+
+bool LexToken::isBreakTk() {
+    return _typeEnum == BREAKTK;
+}
+
+bool LexToken::isContinueTk() {
+    return _typeEnum == CONTINUETK;
+}
+
+bool LexToken::isReturnTk() {
+    return _typeEnum == RETURNTK;
+}
+
+bool LexToken::isPrintfTk() {
+    return _typeEnum == PRINTFTK;
+}
+
+bool LexToken::isScanfTk() {
+    return _typeEnum == SCANFTK;
+}
+
+bool LexToken::isElseTk() {
+    return _typeEnum == ELSETK;
 }
 
 SyntaxNode::SyntaxNode() {

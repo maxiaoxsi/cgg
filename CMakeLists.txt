@@ -15,4 +15,6 @@ add_executable(cgg main.cpp
         parser.varDecl.cpp
         parser.exp.cpp
         parser.funcDef.cpp
+        parser.strCon.cpp
+        parser.stmt.cpp
 )
