@@ -227,3 +227,139 @@ SyntaxNode Parser::isContinueStmt() {
     }
     return node;
 }
+
+/*
+ * <ReturnStmt> → [Exp] ';'
+ */
+SyntaxNode Parser::isReturnStmt() {
+    SyntaxNode node("<ReturnStmt>");
+    if (!setIdx(_idx + 1)) {
+        return {};
+    }
+    if (_token.isSemicn()) {
+        return node;
+    }
+    else {
+        setIdx(_idx - 1);
+        SyntaxNode expNode = isExp();
+        if (expNode.isNull()) {
+            return {};
+        }
+        node.addChild(expNode);
+        if (!isSemicn()) {
+            return {};
+        }
+    }
+    return node;
+}
+
+/*
+ * <AssignStmt> → <LVal> '=' <Exp> ';'
+ */
+SyntaxNode Parser::isAssignStmt() {
+    SyntaxNode node("<AssignStmt>");
+    // <LVal>
+    SyntaxNode lValNode = isLVal();
+    if (lValNode.isNull()) {
+        return {};
+    }
+    node.addChild(lValNode);
+    // '='
+    if (!isAssign()) {
+        return {};
+    }
+    // <Exp>
+    SyntaxNode expNode = isExp();
+    if (expNode.isNull()) {
+        return {};
+    }
+    node.addChild(expNode);
+    // ';'
+    if (!isSemicn()) {
+        return {};
+    }
+    return node;
+}
+
+/*
+ * <PrintfStmt> → 'printf''('<FormatString>{','Exp}')'';'
+ */
+SyntaxNode Parser::isPrintfStmt() {
+    SyntaxNode node("<PrintfStmt>");
+    // 'printf'
+    if (!isPrintfTk()) {
+        return {};
+    }
+    // '('
+    if (!isLParent()) {
+        return {};
+    }
+    // <FormatString>
+    SyntaxNode formatStringNode = isFormatString();
+    if (formatStringNode.isNull()) {
+        return {};
+    }
+    node.addChild(formatStringNode);
+    // {','Exp}
+    if (!setIdx(_idx + 1)) {
+        return {};
+    }
+    while (_token.isComma()) {
+        // <Exp>
+        SyntaxNode expNode = isExp();
+        if (expNode.isNull()) {
+            return {};
+        }
+        node.addChild(expNode);
+    }
+    setIdx(_idx - 1);
+    // ')'
+    if (!isRParent()) {
+        return {};
+    }
+    // ';'
+    if (!isSemicn()) {
+        return {};
+    }
+    return node;
+}
+
+/*
+ * <ScanfStmt> → 'scanf''('<FormatString>{','Exp}')'';'
+ */
+
+SyntaxNode Parser::isScanfStmt() {
+    SyntaxNode node("<ScanfStmt>");
+    // 'scanf'
+    if (!isScanfTk()) {
+        return {};
+    }
+    // '('
+    if (!isLParent()) {
+        return {};
+    }
+    // <FormatString>
+    SyntaxNode formatStringNode = isFormatString();
+    if (formatStringNode.isNull()) {
+        return {};
+    }
+    node.addChild(formatStringNode);
+    // {','Exp}')'
+    if (!setIdx(_idx + 1)) {
+        return {};
+    }
+    while (_token.isComma()) {
+        // <Exp>
+        SyntaxNode expNode = isExp();
+        if (expNode.isNull()) {
+            return {};
+        }
+        node.addChild(expNode);
+    }
+    setIdx(_idx - 1);
+    // ';'
+    if (!isSemicn()) {
+        return {};
+    }
+    return node;
+}

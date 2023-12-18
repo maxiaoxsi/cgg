@@ -14,7 +14,8 @@ enum typeId {
     IDENFR, INTCON, CHARCON, STRCON,
     PLUS, MINU, MULT, DIV, MOD,// operators
     LSS, LEQ, GRE, GEQ, EQL, NEQ, // compares
-    ASSIGN, SEMICN, COMMA, NOT,
+    OR, AND, NOT, // logic ops
+    ASSIGN, SEMICN, COMMA,
     LPARENT, RPARENT, LBRACK, RBRACK, LBRACE, RBRACE //brackets
 };
 
@@ -34,6 +35,7 @@ public:
     bool isComma();
     bool isSemicn();
     bool isEql();
+    bool isNeq();
     bool isAssign();
     bool isIntTk();
     bool isCharTk();
@@ -49,7 +51,6 @@ public:
     bool isMod();
     bool isMul();
     bool isUnaryOp();
-    bool isNot();
     bool isIntCon();
     bool isCharCon();
     bool isNumber();
@@ -62,6 +63,14 @@ public:
     bool isPrintfTk();
     bool isScanfTk();
     bool isElseTk();
+    bool isStrCon();
+    bool isNot();
+    bool isOr();
+    bool isAnd();
+    bool isLss();
+    bool isLeq();
+    bool isGre();
+    bool isGeq();
     typeId typeEnum();
 
 private:

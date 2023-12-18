@@ -5,34 +5,30 @@
 #include "parser.h"
 
 /*
- * <ConstDecl> → ‘const’ <BType> <ConstDef> {‘,’ <ConstDef>};
+ * <ConstDecl> → ‘const’ <BType> <ConstDef> {‘,’ <ConstDef>} ';'
  */
 SyntaxNode Parser::isConstDecl(bool isGlobal) {
     SyntaxNode node("<ConstDecl>");
     // 'const'
-    if (!setIdx(_idx + 1)) {
+    if (!isConstTk()) {
         return {};
     }
-    if (!_token.isConstTk()) {
-        return {};
-    }
-    //<BType>
+    // <BType>
     SyntaxNode bTypeNode = isBType();
     if (bTypeNode.isNull()) {
         return {};
     }
     node.addChild(bTypeNode);
+    // <ConstDef> {‘,’ <ConstDef>}
     do {
         SyntaxNode constDefNode = isConstDef();
         if (constDefNode.isNull()) {
             return {};
         }
         node.addChild(constDefNode);
-        if (!setIdx(_idx + 1)) {
-            return {};
-        }
-    } while(_token.isComma());
-    if (!_token.isSemicn()) {
+    } while(isComma());
+    // ';'
+    if (!isSemicn()) {
         return {};
     }
     return node;
@@ -43,34 +39,30 @@ SyntaxNode Parser::isConstDecl(bool isGlobal) {
  */
 SyntaxNode Parser::isConstDef() {
     SyntaxNode node("<ConstDef>");
+    // <Ident>
     SyntaxNode identNode = isIdent();
     if (identNode.isNull()) {
         return {};
     }
     node.addChild(identNode);
-    if (!setIdx(_idx + 1)) {
-        return {};
-    }
-    // multi array
-    while (_token.isLBrack()) {
+    // { '[' <ConstExp> ']' }
+    while (isLBrack()) {
+        // <ConstExp>
         SyntaxNode constExpNode = isConstExp();
         if (constExpNode.isNull()) {
             return {};
         }
         node.addChild(constExpNode);
-        if (!setIdx(_idx + 1)) {
-            return {};
-        }
-        if (!_token.isRBrack()) {
-            return {};
-        }
-        if (!setIdx(_idx + 1)) {
+        // ']'
+        if (!isRBrack()) {
             return {};
         }
     }
-    if (!_token.isAssign()) {
+    // '='
+    if (!isAssign()) {
         return {};
     }
+    // <ConstInitVal>
     SyntaxNode constDefVarNode = isConstInitVal();
     if (constDefVarNode.isNull()) {
         return {};
@@ -84,11 +76,8 @@ SyntaxNode Parser::isConstDef() {
  */
 SyntaxNode Parser::isConstInitVal() {
     SyntaxNode node("<ConstInitVal>");
-    if (!setIdx(_idx + 1)) {
-        return {};
-    }
-    if (!_token.isLBrace()) {
-        setIdx(_idx - 1);
+    if (!isLBrace()) {
+        // <ConstExp>
         SyntaxNode constExpNode = isConstExp();
         if (constExpNode.isNull()) {
             return {};
@@ -96,24 +85,31 @@ SyntaxNode Parser::isConstInitVal() {
         node.addChild(constExpNode);
         return node;
     }
+    // is token '}'
+    if (isRBrace()) {
+        return node;
+    }
     do {
+        // <ConstInitVal> { ','< ConstInitVal> }
+        // <ConstInitVal>
         SyntaxNode constInitVarNode = isConstInitVal();
         if (constInitVarNode.isNull()) {
             return {};
         }
         node.addChild(constInitVarNode);
-        if (!setIdx(_idx + 1)) {
-            return {};
-        }
-    } while(_token.isRBrace());
-    if (!_token.isRBrace()) {
+    } while(isComma());
+    if (!isRBrace()) {
         return {};
     }
     return node;
 }
 
+/*
+ * <ConstExp> → <AddExp>
+ */
 SyntaxNode Parser::isConstExp() {
     SyntaxNode node("<ConstExp>");
+    // <AddExp>
     SyntaxNode addExpNode = isAddExp();
     if (addExpNode.isNull()) {
         return {};

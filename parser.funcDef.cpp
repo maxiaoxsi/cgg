@@ -250,3 +250,33 @@ SyntaxNode Parser::isFuncType() {
     }
     return node;
 }
+
+/*
+ * <MainFuncDef> → 'int' 'main' '(' ')' <Block>
+ */
+SyntaxNode Parser::isMainFuncDef() {
+    SyntaxNode node("<MainFuncDef>");
+    // 'int'
+    if (!isIntTk()) {
+        return {};
+    }
+    // 'main'
+    if (!isMainTk()) {
+        return {};
+    }
+    // '('
+    if (!isLParent()) {
+        return {};
+    }
+    // ')'
+    if (!isRParent()) {
+        return {};
+    }
+    // <Block>
+    SyntaxNode blockNode = isBlock();
+    if (blockNode.isNull()) {
+        return {};
+    }
+    node.addChild(blockNode);
+    return node;
+}

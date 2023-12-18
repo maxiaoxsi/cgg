@@ -8,6 +8,7 @@
 Parser::Parser() {
     setIdx(0);
 }
+
 bool Parser::setIdx(int idx) {
     if (idx == -1) {
         _idx = idx;
@@ -69,11 +70,14 @@ bool Parser::procedure() {
                 setIdx(_idx + 1);
                 continue;
             }
-
-            continue;
         }
         break;
     }
+    SyntaxNode mainFuncDefNode = isMainFuncDef();
+    if (mainFuncDefNode.isNull()) {
+        return false;
+    }
+    root.addChild(mainFuncDefNode);
     return true;
 }
 
@@ -104,6 +108,7 @@ SyntaxNode Parser::isIdent() {
         return {};
     }
     if (!_token.isIdenfr()) {
+        _idx = _idx - 1;
         return {};
     }
     node.setCon(_token.tokenCon());
@@ -211,6 +216,18 @@ SyntaxNode Parser::isCond() {
     return node;
 }
 
+
+/*
+ * <FormatString> -> '"' {<char>} '"'
+ */
+SyntaxNode Parser::isFormatString() {
+    SyntaxNode node("<FormatString>");
+    if (!isStrCon()) {
+        return {};
+    }
+    node.setCon(_token.tokenCon());
+    return node;
+}
 
 
 

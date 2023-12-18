@@ -184,6 +184,38 @@ bool LexToken::isElseTk() {
     return _typeEnum == ELSETK;
 }
 
+bool LexToken::isStrCon() {
+    return _typeEnum == STRCON;
+}
+
+bool LexToken::isOr() {
+    return _typeEnum == OR;
+}
+
+bool LexToken::isAnd() {
+    return _typeEnum == AND;
+}
+
+bool LexToken::isNeq() {
+    return _typeEnum == NEQ;
+}
+
+bool LexToken::isLss() {
+    return _typeEnum == LSS;
+}
+
+bool LexToken::isLeq() {
+    return _typeEnum == LEQ;
+}
+
+bool LexToken::isGre() {
+    return _typeEnum == GRE;
+}
+
+bool LexToken::isGeq() {
+    return _typeEnum == GEQ;
+}
+
 SyntaxNode::SyntaxNode() {
     _label = "";
 }
