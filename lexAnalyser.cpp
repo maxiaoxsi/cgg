@@ -5,6 +5,7 @@
 #include<iostream>
 #include<map>
 #include<cctype>
+#include<sstream>
 #include "lexAnalyser.h"
 #include "dataExplorer.h"
 
@@ -14,7 +15,8 @@ std::map<std::string, typeId> reservedWordMap =
         {{"const", CONSTTK}, {"int", INTTK}, {"char", CHARTK}, {"void", VOIDTK},
          {"main", MAINTK}, {"if", IFTK}, {"else", ELSETK}, {"do", DOTK},
          {"while", WHILETK}, {"for", FORTK}, {"scanf", SCANFTK},
-         {"printf", PRINTFTK}, {"return", RETURNTK}, {"func", FUNCTK}};
+         {"printf", PRINTFTK}, {"return", RETURNTK}, {"func", FUNCTK},
+         {"thread", THREAD}};
 
 std::map<char, typeId> operatorMap =
         {{'+', PLUS}, {'-', MINU}, {'*', MULT}, {'/', DIV} , {'%', MOD}};
@@ -266,6 +268,9 @@ void LexAnalyser::putToken(typeId type) {
             break;
         case RBRACE:
             putToken("RBRACE", RBRACE);
+            break;
+        case THREAD:
+            putToken("THREAD", THREAD);
             break;
         default:
             break;
