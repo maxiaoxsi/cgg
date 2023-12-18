@@ -60,6 +60,7 @@ private:
     SyntaxNode isEqExp();
     SyntaxNode isRelExp();
     SyntaxNode isMainFuncDef();
+    SyntaxNode isThreadFuncDef();
     bool isComma();
     bool isSemicn();
     bool isAssign();
@@ -80,6 +81,7 @@ private:
     bool isIntTk();
     bool isMainTk();
     bool isConstTk();
+    bool isThreadTk();
     bool isStrCon();
     bool isEql();
     bool isNeq();

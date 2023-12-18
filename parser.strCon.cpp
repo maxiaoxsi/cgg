@@ -325,4 +325,14 @@ bool Parser::isMul() {
     return true;
 }
 
+bool Parser::isThreadTk() {
+    if (!setIdx(_idx + 1)) {
+        return false;
+    }
+    if (!_token.isThreadTk()) {
+        setIdx(_idx - 1);
+        return false;
+    }
+    return true;
+}
 

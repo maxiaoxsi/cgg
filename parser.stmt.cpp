@@ -363,3 +363,31 @@ SyntaxNode Parser::isScanfStmt() {
     }
     return node;
 }
+
+
+/*
+ * <ThreadFuncDef> → 'Thread' '(' <FuncDef> ')' 
+ */
+SyntaxNode Parser::isThreadFuncDef(){
+    SyntaxNode node("<ThreadFuncDef>");
+    // 'Thread'
+    if (!isThreadTk()) {
+        return {};
+    }
+    // '('
+    if (!isLParent()) {
+        return {};
+    }
+    // <FuncDef>
+    SyntaxNode funcDefNode = isFuncDef();
+    if (funcDefNode.isNull()) {
+        return {};
+    }
+    node.addChild(funcDefNode);
+    // ')'
+    if (!isRParent()) {
+        return {};
+    }
+    return node;
+
+}
