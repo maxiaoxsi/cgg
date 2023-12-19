@@ -32,7 +32,7 @@ bool Parser::isFuncTk() {
     if (!setIdx(_idx + 1)) {
         return false;
     }
-    if (!_token.isRBrack()) {
+    if (!_token.isFuncTk()) {
         setIdx(_idx - 1);
         return false;
     }
@@ -132,6 +132,17 @@ bool Parser::isBreakTk() {
         return false;
     }
     if (!_token.isBreakTk()) {
+        setIdx(_idx - 1);
+        return false;
+    }
+    return true;
+}
+
+bool Parser::isReturnTk() {
+    if (!setIdx(_idx + 1)) {
+        return false;
+    }
+    if (!_token.isReturnTk()) {
         setIdx(_idx - 1);
         return false;
     }

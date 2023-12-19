@@ -80,6 +80,7 @@ private:
     bool isIntTk();
     bool isMainTk();
     bool isConstTk();
+    bool isReturnTk();
     bool isStrCon();
     bool isEql();
     bool isNeq();

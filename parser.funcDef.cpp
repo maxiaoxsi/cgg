@@ -8,49 +8,50 @@
  * <FuncDef> → 'func' <Ident> '(' [FuncFParams] ')' <FuncType> <Block>
  */
 SyntaxNode Parser::isFuncDef() {
+    int idx_ori = _idx;
     SyntaxNode node("<FuncDef>");
     // 'func'
     if (!isFuncTk()) {
+        _idx = idx_ori;
         return {};
     }
     // <Ident>
     SyntaxNode identNode = isIdent();
     if (identNode.isNull()) {
+        _idx = idx_ori;
         return {};
     }
     node.addChild(identNode);
     // '('
     if (!isLParent()) {
+        _idx = idx_ori;
         return {};
     }
     // [FuncFParams]
-    if (!setIdx(_idx + 1)) {
-        return {};
-    }
-    if (!_token.isRParent()) {
-        setIdx(_idx - 1);
+    if (!isRParent()) {
         SyntaxNode funcFParamsNode = isFuncFParams();
         if (funcFParamsNode.isNull()) {
+            _idx = idx_ori;
             return {};
         }
         node.addChild(funcFParamsNode);
-        if (!setIdx(_idx + 1)) {
+        // ')'
+        if (!isRParent()) {
+            _idx = idx_ori;
             return {};
         }
-    }
-    // ')'
-    if (!_token.isRParent()) {
-        return {};
     }
     // <FuncType>
     SyntaxNode funcTypeNode = isFuncType();
     if (funcTypeNode.isNull()) {
+        _idx = idx_ori;
         return {};
     }
     node.addChild(funcTypeNode);
     // <Block>
     SyntaxNode blockNode = isBlock();
     if (blockNode.isNull()) {
+        _idx = idx_ori;
         return {};
     }
     node.addChild(blockNode);
@@ -61,20 +62,18 @@ SyntaxNode Parser::isFuncDef() {
  * <FuncFParams> → <FuncFParam> { ',' <FuncFParam> }
  */
 SyntaxNode Parser::isFuncFParams() {
+    int idx_ori = _idx;
     SyntaxNode node("<FuncFParams>");
+    // <FuncFParam> { ',' <FuncFParam> }
     do {
         // <FuncFParam>
         SyntaxNode FuncFParam = isFuncFParam();
         if (FuncFParam.isNull()) {
+            _idx = idx_ori;
             return {};
         }
         node.addChild(FuncFParam);
-        // if ','
-        if (!setIdx(_idx + 1)) {
-            return {};
-        }
-    } while(_token.isComma());
-    setIdx(_idx - 1);
+    } while(isComma());
     return node;
 }
 
@@ -82,41 +81,46 @@ SyntaxNode Parser::isFuncFParams() {
  * <FuncFParam> → <Ident> <FuncFVarParam> | <Ident> <FuncFArrayParam> | <Ident> <FuncFFuncParam>
  */
 SyntaxNode Parser::isFuncFParam() {
+    int idx_ori = _idx;
     SyntaxNode node("<FuncFParam>");
     // <Ident>
     SyntaxNode identNode = isIdent();
     if (identNode.isNull()) {
+        _idx = idx_ori;
         return {};
     }
     node.addChild(identNode);
     // is token '[', 'BType' or 'func'
     if (!setIdx(_idx + 1)) {
+        _idx = idx_ori;
         return {};
     }
     if (_token.isBType()) {
-        setIdx(_idx) - 1;
+        setIdx(_idx - 1);
         // <FuncFVarParam>
         SyntaxNode funcFVarParamNode = isFuncFVarParam();
         if (funcFVarParamNode.isNull()) {
+            _idx = idx_ori;
             return {};
         }
         node.addChild(funcFVarParamNode);
     }
-    else if (_token.isLParent()) {
+    else if (_token.isLBrack()) {
         setIdx(_idx - 1);
         // <FuncFArrayParam>
         SyntaxNode funcFArrayParamNode = isFuncFArrayParam();
         if (funcFArrayParamNode.isNull()) {
+            _idx = idx_ori;
             return {};
         }
         node.addChild(funcFArrayParamNode);
     }
     else {
-        // 'func'
         setIdx(_idx - 1);
         // <FuncFFuncParam>
         SyntaxNode funcFFuncParamNode = isFuncFFuncParam();
         if (funcFFuncParamNode.isNull()) {
+            _idx = idx_ori;
             return {};
         }
         node.addChild(funcFFuncParamNode);
@@ -129,10 +133,12 @@ SyntaxNode Parser::isFuncFParam() {
  */
 
 SyntaxNode Parser::isFuncFVarParam() {
+    int idx_ori = _idx;
     SyntaxNode node("<FuncFParamVar>");
     // <BType>
     SyntaxNode bTypeNode = isBType();
     if (bTypeNode.isNull()) {
+        _idx = idx_ori;
         return {};
     }
     node.addChild(bTypeNode);
@@ -144,38 +150,36 @@ SyntaxNode Parser::isFuncFVarParam() {
  */
 
 SyntaxNode Parser::isFuncFArrayParam() {
+    int idx_ori = _idx;
     SyntaxNode node("<FuncFArrayParam>");
     // '['
     if (!isLBrack()) {
+        _idx = idx_ori;
         return {};
     }
     // ']'
     if (!isRBrack()) {
+        _idx = idx_ori;
         return {};
     }
-    // is token '['
-    if (!setIdx(_idx + 1)) {
-        return {};
-    }
-    while (_token.isLBrack()) {
+    // { '[' ConstExp ']' }
+    while (isLBrack()) {
         // ConstExp
         SyntaxNode  constExpNode = isConstExp();
         if (constExpNode.isNull()) {
+            _idx = idx_ori;
             return {};
         }
         node.addChild(constExpNode);
         if (!isRBrack()) {
-            return {};
-        }
-        // is token '['
-        if (!setIdx(_idx + 1)) {
+            _idx = idx_ori;
             return {};
         }
     }
-    setIdx(_idx - 1);
     // <BType>
     SyntaxNode bTypeNode = isBType();
     if (bTypeNode.isNull()) {
+        _idx = idx_ori;
         return {};
     }
     node.addChild(bTypeNode);
@@ -184,43 +188,35 @@ SyntaxNode Parser::isFuncFArrayParam() {
 
 
 /*
- * <FuncFFuncParam> → 'func' '(' {<BType>} ')' <BType>
+ * <FuncFFuncParam> → '(' {<BType>} ')' <BType>
  */
-
 SyntaxNode Parser::isFuncFFuncParam() {
+    int idx_ori = _idx;
     SyntaxNode node("<FuncFFuncParam>");
-    // 'func'
-    if (!isFuncTk()) {
-        return {};
-    }
     // '('
     if (!isLParent()) {
+        _idx = idx_ori;
         return {};
     }
     // is token <BType>
-    if (!setIdx(_idx + 1)) {
-        return {};
-    }
-    while (_token.isBType()) {
-        setIdx(_idx - 1);
-        // <BType>
-        SyntaxNode bTypeNode = isBType();
-        if (bTypeNode.isNull()) {
-            return {};
-        }
-        node.addChild(bTypeNode);
-        if (!setIdx(_idx + 1)) {
-            return {};
-        }
-    }
-    setIdx(_idx - 1);
-    // ')'
     if (!isRParent()) {
-        return {};
+        do {
+            SyntaxNode bTypeNode = isBType();
+            if (bTypeNode.isNull()) {
+                _idx = idx_ori;
+                return {};
+            }
+            node.addChild(bTypeNode);
+        } while (isComma());
+        if (!isRParent()) {
+            _idx = idx_ori;
+            return {};
+        }
     }
     // <BType>
     SyntaxNode bTypeNode = isBType();
     if (bTypeNode.isNull()) {
+        _idx = idx_ori;
         return {};
     }
     node.addChild(bTypeNode);
@@ -228,53 +224,57 @@ SyntaxNode Parser::isFuncFFuncParam() {
 }
 
 /*
- * FuncType → [<BType>]
+ * <FuncType> → [<BType>]
  */
 SyntaxNode Parser::isFuncType() {
+    int idx_ori = _idx;
     SyntaxNode node("<FuncType>");
-    // is token <BType>
-    if (!setIdx(_idx + 1)) {
-        return {};
+    // <BType>
+    SyntaxNode bTypeNode = isBType();
+    if (bTypeNode.isNull()) {
+        return node;
     }
-    if (_token.isBType()) {
-        setIdx(_idx - 1);
-        // <BType>
-        SyntaxNode  bTypeNode = isBType();
-        if (bTypeNode.isNull()) {
-            return {};
-        }
-        node.addChild(bTypeNode);
-    }
-    else {
-        setIdx(_idx - 1);
-    }
+    node.addChild(bTypeNode);
     return node;
 }
 
 /*
- * <MainFuncDef> → 'int' 'main' '(' ')' <Block>
+ * <MainFuncDef> → 'func' 'main' '(' ')' <FuncType> <Block>
  */
 SyntaxNode Parser::isMainFuncDef() {
+    int idx_ori = _idx;
     SyntaxNode node("<MainFuncDef>");
-    // 'int'
-    if (!isIntTk()) {
+    // 'func'
+    if (!isFuncTk()) {
+        setIdx(idx_ori);
         return {};
     }
     // 'main'
     if (!isMainTk()) {
+        setIdx(idx_ori);
         return {};
     }
     // '('
     if (!isLParent()) {
+        setIdx(idx_ori);
         return {};
     }
     // ')'
     if (!isRParent()) {
+        setIdx(idx_ori);
         return {};
     }
+    // <FuncType>
+    SyntaxNode funcTypeNode = isFuncType();
+    if (funcTypeNode.isNull()) {
+        setIdx(idx_ori);
+        return {};
+    }
+    node.addChild(funcTypeNode);
     // <Block>
     SyntaxNode blockNode = isBlock();
     if (blockNode.isNull()) {
+        setIdx(idx_ori);
         return {};
     }
     node.addChild(blockNode);

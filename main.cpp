@@ -5,7 +5,7 @@
 #include "parser.h"
 
 int main(int argc, char **argv) {
-    std::cout << "awesome brother chao!" << std::endl;
+    std::cout << "cgg start!" << std::endl;
     std::string fileDir;
     if (argc == 1) {
         fileDir = "../testfile.txt";

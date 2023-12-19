@@ -7,72 +7,68 @@
  * <VarDecl> → <BType> <VarDef> { ',' <VarDef> } ';'
  */
 SyntaxNode Parser::isVarDecl(bool isGlobal) {
+    int idx_ori = _idx;
     SyntaxNode node("<VarDecl>");
     // <BType>
     SyntaxNode bTypeNode = isBType();
     if (bTypeNode.isNull()) {
+        _idx = idx_ori;
         return {};
     }
     node.addChild(bTypeNode);
-    // <VarDef> {',' <VarDef>}';'
+    // <VarDef> {',' <VarDef>}
     do {
+        // <VarDef>
         SyntaxNode varDefNode = isVarDef();
         if (varDefNode.isNull()) {
+            _idx = idx_ori;
             return {};
         }
         node.addChild(varDefNode);
-        if (!setIdx(_idx + 1)) {
-            return {};
-        }
-    } while (_token.isComma());
-    if (!_token.isSemicn()) {
+    } while (isComma());
+    // ';'
+    if (!isSemicn()) {
+        _idx = idx_ori;
         return {};
     }
     return node;
 }
 
 /*
- * <VarDef> → <Ident> { '[' <ConstExp> ']' } | <Ident> { '[' <ConstExp> ']' } '=' <InitVal>
+ * <VarDef> → <Ident> { '[' <ConstExp> ']' } [ '=' <InitVal> ]
  */
 SyntaxNode Parser::isVarDef() {
+    int idx_ori = _idx;
     SyntaxNode node("<VarDef>");
     // <Ident>
     SyntaxNode identNode = isIdent();
     if (identNode.isNull()) {
+        _idx = idx_ori;
         return {};
     }
     node.addChild(identNode);
     // { '[' <ConstExp> ']' }
-    if (!setIdx(_idx + 1)) {
-        return {};
-    }
     while(_token.isLBrack()) {
         // <ConstExp>
         SyntaxNode constExpNode = isConstExp();
         if (constExpNode.isNull()) {
+            _idx = idx_ori;
             return {};
         }
         // ']'
-        if (!setIdx(_idx + 1)) {
-            return {};
-        }
-        if (!_token.isRBrack()) {
-            return {};
-        }
-        if (!setIdx(_idx + 1)) {
+        if (!isRBrack()) {
             return {};
         }
     }
     // '=' <InitVal>
-    if (_token.isAssign()) {
+    if (isAssign()) {
         // <InitVal>
         SyntaxNode initValNode = isInitVal();
         if (initValNode.isNull()) {
+            _idx = idx_ori;
             return {};
         }
         node.addChild(initValNode);
-    } else {
-        setIdx(_idx - 1);
     }
     return node;
 }
@@ -81,36 +77,30 @@ SyntaxNode Parser::isVarDef() {
  * <InitVal> → <Exp> | '{' [ <InitVal> { ',' InitVal } ] '}'
  */
 SyntaxNode Parser::isInitVal() {
+    int idx_ori = _idx;
     SyntaxNode node("<InitVal>");
-    if (!setIdx(_idx + 1)) {
-        return {};
-    }
-    if (_token.isLBrace()) {
+    if (isLBrace()) {
         do {
             // <InitVal>
             SyntaxNode initValNode = isInitVal();
             if (initValNode.isNull()) {
+                _idx = idx_ori;
                 return {};
             }
             node.addChild(initValNode);
-            // is comma
-            if (!setIdx(_idx + 1)) {
-                return {};
-            }
-        } while (_token.isComma());
-        if (!_token.isRBrace()) {
+        } while (isComma());
+        if (!isRBrace()) {
+            _idx = idx_ori;
             return {};
         }
     } else {
-        setIdx(_idx - 1);
         // <Exp>
         SyntaxNode expNode = isExp();
         if (expNode.isNull()) {
+            _idx = idx_ori;
             return {};
         }
         node.addChild(expNode);
     }
     return node;
 }
-
-
