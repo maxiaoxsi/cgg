@@ -27,7 +27,9 @@ bool Parser::setIdx(int idx) {
  * <CompUnit> → {<ConstDecl> | <VarDecl> | <FuncDef>} MainFuncDef
  */
 bool Parser::procedure() {
+    setIdx(_idx - 1);
     while(true) {
+        setIdx(_idx + 1);
         if (_token.isConstTk()) {
             setIdx(_idx - 1);
             // <ConstDecl>
@@ -67,10 +69,10 @@ bool Parser::procedure() {
                     return false;
                 }
                 root.addChild(funcDefNode);
-                setIdx(_idx + 1);
                 continue;
             }
         }
+        setIdx(_idx - 1);
         break;
     }
     SyntaxNode mainFuncDefNode = isMainFuncDef();
@@ -86,12 +88,14 @@ bool Parser::procedure() {
  * <BType> → 'int' | 'char'
  */
 SyntaxNode Parser::isBType() {
+    int idx_ori = _idx;
     SyntaxNode node("<BType>");
     // <BType>
     if (!setIdx(_idx + 1)) {
         return {};
     }
     if (!_token.isBType()) {
+        setIdx(idx_ori);
         return {};
     }
     std::string typeStr = _token.typeStr();
@@ -140,28 +144,21 @@ SyntaxNode Parser::isFuncRParams() {
  * <Block> → '{' { <BlockItem> } '}'
  */
 SyntaxNode Parser::isBlock() {
+    int idx_ori = _idx;
     SyntaxNode node("<Block>");
     // '{'
     if (!isLBrace()) {
+        setIdx(idx_ori);
         return {};
     }
-    // is token '}'
-    if (!setIdx(_idx + 1)) {
-        return {};
-    }
-    while (!_token.isRBrace()) {
-        setIdx(_idx - 1);
+    // { <BlockItem> } '}'
+    while (!isRBrace()) {
         SyntaxNode blockItemNode = isBlockItem();
         if (blockItemNode.isNull()) {
+            setIdx(idx_ori);
             return {};
         }
         node.addChild(blockItemNode);
-        if (!setIdx(_idx + 1)) {
-            return {};
-        }
-    }
-    if (_token.isRBrace()) {
-        return {};
     }
     return node;
 }
@@ -170,15 +167,18 @@ SyntaxNode Parser::isBlock() {
  * <BlockItem> → <ConstDecl> | <VarDecl> | <Stmt>
  */
 SyntaxNode Parser::isBlockItem() {
+    int idx_ori = _idx;
     SyntaxNode node("<BlockItem>");
     // is token CONSTTK or <BType> or other
     if (!setIdx(_idx + 1)) {
+        setIdx(idx_ori);
         return {};
     }
     if (_token.isConstTk()) {
         setIdx(_idx - 1);
         SyntaxNode constDeclNode = isConstDecl(false);
         if (constDeclNode.isNull()) {
+            setIdx(idx_ori);
             return {};
         }
         node.addChild(constDeclNode);
@@ -187,6 +187,7 @@ SyntaxNode Parser::isBlockItem() {
         setIdx(_idx - 1);
         SyntaxNode varDeclNode = isVarDecl(false);
         if (varDeclNode.isNull()) {
+            setIdx(idx_ori);
             return {};
         }
         node.addChild(varDeclNode);
@@ -195,6 +196,7 @@ SyntaxNode Parser::isBlockItem() {
         setIdx(_idx - 1);
         SyntaxNode stmtNode = isStmt();
         if (stmtNode.isNull()) {
+            setIdx(idx_ori);
             return {};
         }
         node.addChild(stmtNode);

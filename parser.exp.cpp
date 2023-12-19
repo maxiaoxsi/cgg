@@ -12,7 +12,7 @@ SyntaxNode Parser::isExp() {
     SyntaxNode node("<Exp>");
     SyntaxNode addExpNode = isAddExp();
     if (addExpNode.isNull()) {
-        _idx = idx_ori;
+        setIdx(idx_ori);
         return {};
     }
     node.addChild(addExpNode);
@@ -30,7 +30,7 @@ SyntaxNode Parser::isAddExp() {
         // <MulExp>
         SyntaxNode mulExpNode = isMulExp();
         if (mulExpNode.isNull()) {
-            _idx = idx_ori;
+            setIdx(idx_ori);
             return {};
         }
         node.addChild(mulExpNode);
@@ -55,7 +55,7 @@ SyntaxNode Parser::isMulExp() {
         // <UnaryExp>
         SyntaxNode unaryExpNode = isUnaryExp();
         if (unaryExpNode.isNull()) {
-            _idx = idx_ori;
+            setIdx(idx_ori);
             return {};
         }
         node.addChild(unaryExpNode);
@@ -70,39 +70,11 @@ SyntaxNode Parser::isMulExp() {
 }
 
 /*
- * <UnaryExp> → <PrimaryExp> | <Ident> ['(' [<FuncRParams>] ')'] | <UnaryOp> <UnaryExp>
+ * <UnaryExp> → <PrimaryExp> | <Ident> '(' [<FuncRParams>] ')' | <UnaryOp> <UnaryExp>
  */
 SyntaxNode Parser::isUnaryExp() {
     int idx_ori = _idx;
     SyntaxNode node("<UnaryExp>");
-    SyntaxNode identNode = isIdent();
-    // is func call
-    if (!identNode.isNull()) {
-        //<Ident>
-        // '('
-        if (isLParent()) {
-            node.addChild(identNode);
-            //')' or <FuncRParams>
-            if (!isRParent()) {
-                // <FuncRParams>
-                SyntaxNode funcRParamsNode = isFuncRParams();
-                if (funcRParamsNode.isNull()) {
-                    _idx = idx_ori;
-                    return {};
-                }
-                node.addChild(funcRParamsNode);
-                // ')'
-                if (!isRParent()) {
-                    _idx = idx_ori;
-                    return {};
-                }
-            }
-            return node;
-        }
-        else {
-            setIdx(_idx - 1);
-        }
-    }
     // is unary exp with op
     // <UnaryOp> <UnaryExp>
     SyntaxNode unaryOpNode = isUnaryOp();
@@ -111,11 +83,38 @@ SyntaxNode Parser::isUnaryExp() {
         // <UnaryExp>
         SyntaxNode unaryExpNode = isUnaryExp();
         if (unaryOpNode.isNull()) {
-            _idx = idx_ori;
+            setIdx(idx_ori);
             return {};
         }
         node.addChild(unaryExpNode);
         return node;
+    }
+    // is func call
+    SyntaxNode identNode = isIdent();
+    if (!identNode.isNull()) {
+        if (!isLParent()) {
+            setIdx(idx_ori);
+        }
+        // '('
+        else {
+            node.addChild(identNode);
+            //')' or <FuncRParams>
+            if (!isRParent()) {
+                // <FuncRParams>
+                SyntaxNode funcRParamsNode = isFuncRParams();
+                if (funcRParamsNode.isNull()) {
+                    setIdx(idx_ori);
+                    return {};
+                }
+                node.addChild(funcRParamsNode);
+                // ')'
+                if (!isRParent()) {
+                    setIdx(idx_ori);
+                    return {};
+                }
+            }
+            return node;
+        }
     }
     // else <PrimaryExp>
     SyntaxNode primaryExpNode = isPrimaryExp();
@@ -124,6 +123,45 @@ SyntaxNode Parser::isUnaryExp() {
         return {};
     }
     node.addChild(primaryExpNode);
+    return node;
+}
+
+/*
+ * <PrimaryExp> → '(' <Exp> ')' | <LVal> | <Number>
+ */
+SyntaxNode Parser::isPrimaryExp() {
+    int idx_ori = _idx;
+    SyntaxNode node("<PrimaryExp>");
+    // is '(' <Exp> ')'
+    if (isLParent()) {
+        // <Exp>
+        SyntaxNode expNode = isExp();
+        if (expNode.isNull()) {
+            _idx = idx_ori;
+            return {};
+        }
+        node.addChild(expNode);
+        // ')'
+        if (!isRParent()) {
+            _idx = idx_ori;
+            return {};
+        }
+        return node;
+    }
+    // <Number>
+    SyntaxNode numberNode = isNumber();
+    if (!numberNode.isNull()) {
+        //<Number>
+        node.addChild(numberNode);
+        return node;
+    }
+    // <LVal>
+    SyntaxNode lValNode = isLVal();
+    if (lValNode.isNull()) {
+        _idx = idx_ori;
+        return {};
+    }
+    node.addChild(lValNode);
     return node;
 }
 
@@ -172,47 +210,6 @@ SyntaxNode Parser::isMulOp() {
         return {};
     }
     node.setCon(_token.tokenCon());
-    return node;
-}
-
-
-
-/*
- * <PrimaryExp> → '(' <Exp> ')' | <LVal> | <Number>
- */
-SyntaxNode Parser::isPrimaryExp() {
-    int idx_ori = _idx;
-    SyntaxNode node("<PrimaryExp>");
-    // is '(' <Exp> ')'
-    if (isLParent()) {
-        // <Exp>
-        SyntaxNode expNode = isExp();
-        if (expNode.isNull()) {
-            _idx = idx_ori;
-            return {};
-        }
-        node.addChild(expNode);
-        // ')'
-        if (!isRParent()) {
-            _idx = idx_ori;
-            return {};
-        }
-        return node;
-    }
-    // <Number>
-    SyntaxNode numberNode = isNumber();
-    if (!numberNode.isNull()) {
-        //<Number>
-        node.addChild(numberNode);
-        return node;
-    }
-    // <LVal>
-    SyntaxNode lValNode = isLVal();
-    if (lValNode.isNull()) {
-        _idx = idx_ori;
-        return {};
-    }
-    node.addChild(lValNode);
     return node;
 }
 
