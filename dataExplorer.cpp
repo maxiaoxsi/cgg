@@ -233,18 +233,25 @@ void SyntaxNode::addChild(SyntaxNode node) {
     _children.push_back(node);
 }
 
-void SyntaxNode::println() {
-    std::cout << "label:" << _label << " con:" << _con << std::endl;
+void SyntaxNode::println(int depth) {
+    for (int i = 0; i < depth; i++) {
+        std::cout << "  ";
+    }
+    if (_con == "") {
+        std::cout << _label << std::endl;
+        return;
+    }
+    std::cout << _label << ": " << _con << std::endl;
 }
 
 void SyntaxNode::setCon(std::string con) {
     _con = con;
 }
 
-void SyntaxNode::printTree() {
-    println();
+void SyntaxNode::printTree(int depth) {
+    println(depth);
     for (int i = 0; i < _children.size(); i++) {
-        _children[i].printTree();
+        _children[i].printTree(depth + 1);
     }
 }
 

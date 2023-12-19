@@ -123,6 +123,7 @@ SyntaxNode Parser::isConstInitVal() {
  * <ConstExp> → <AddExp>
  */
 SyntaxNode Parser::isConstExp() {
+    int idx_ori = _idx;
     setIdx(idx_ori);
     SyntaxNode node("<ConstExp>");
     // <AddExp>

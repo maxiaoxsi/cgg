@@ -277,6 +277,7 @@ SyntaxNode Parser::isMainFuncDef() {
         setIdx(idx_ori);
         return {};
     }
+    // blockNode.setCon(_token.tokenCon());
     node.addChild(blockNode);
     return node;
 }
