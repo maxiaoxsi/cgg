@@ -8,116 +8,121 @@
  * | <ReturnStmt> | <PrintfStmt> | <ScanfStmt>
  */
 SyntaxNode Parser::isStmt() {
+    int idx_ori = _idx;
     SyntaxNode node("<Stmt>");
-    // is token while if break ...
-    if (!setIdx(_idx + 1)) {
-        return {};
-    }
     // <IfStmt>
-    if (_token.isIfTk()) {
+    if (isIfTk()) {
         setIdx(_idx - 1);
         SyntaxNode ifStmtNode = isIfStmt();
         if (ifStmtNode.isNull()) {
+            setIdx(idx_ori);
             return {};
         }
         node.addChild(ifStmtNode);
+        return node;
     }
     // <WhileStmt>
-    else if (_token.isWhileTk()) {
+    if (isWhileTk()) {
         setIdx(_idx - 1);
         SyntaxNode whileStmtNode = isWhileStmt();
         if (whileStmtNode.isNull()) {
+            setIdx(idx_ori);
             return {};
         }
         node.addChild(whileStmtNode);
+        return node;
     }
     // <BreakStmt>
-    else if (_token.isBreakTk()) {
+    if (isBreakTk()) {
         setIdx(_idx - 1);
         SyntaxNode breakStmtNode = isBreakStmt();
         if (breakStmtNode.isNull()) {
+            setIdx(idx_ori);
             return {};
         }
         node.addChild(breakStmtNode);
+        return node;
     }
     // <ContinueStmt>
-    else if (_token.isContinueTk()) {
+    if (isContinueTk()) {
         setIdx(_idx - 1);
         SyntaxNode continueStmtNode = isContinueStmt();
         if (continueStmtNode.isNull()) {
+            setIdx(idx_ori);
             return {};
         }
         node.addChild(continueStmtNode);
+        return node;
     }
     // <ReturnStmt>
-    else if (_token.isReturnTk()) {
+    if (isReturnTk()) {
         setIdx(_idx - 1);
         SyntaxNode returnStmtNode = isReturnStmt();
         if (returnStmtNode.isNull()) {
+            setIdx(idx_ori);
             return {};
         }
         node.addChild(returnStmtNode);
+        return node;
     }
     // <PrintStmt>
-    else if (_token.isPrintfTk()) {
+    if (isPrintfTk()) {
         setIdx(_idx - 1);
         SyntaxNode printfStmtNode = isPrintfStmt();
         if (printfStmtNode.isNull()) {
+            setIdx(idx_ori);
             return {};
         }
         node.addChild(printfStmtNode);
+        return node;
     }
     // <ScanfStmt>
-    else if (_token.isScanfTk()) {
+    if (isScanfTk()) {
         setIdx(_idx - 1);
         SyntaxNode scanfStmtNode = isScanfStmt();
         if (scanfStmtNode.isNull()) {
+            setIdx(idx_ori);
             return {};
         }
         node.addChild(scanfStmtNode);
-    }
-    //<AssignStmt>
-    else if (_token.isIdenfr()) {
-        setIdx(_idx - 1);
-        SyntaxNode assignStmtNode = isAssignStmt();
-        if (assignStmtNode.isNull()) {
-            return {};
-        }
-        node.addChild(assignStmtNode);
+        return node;
     }
     // <Block>
-    else if (_token.isLBrace()) {
+    if (isLBrace()) {
         setIdx(_idx - 1);
         SyntaxNode blockNode = isBlock();
         if (blockNode.isNull()) {
+            setIdx(idx_ori);
             return {};
         }
         node.addChild(blockNode);
+        return node;
     }
     // empty
-    else if (_token.isSemicn()) {
+    if (isSemicn()) {
+        return node;
+    }
+    //<AssignStmt>
+    SyntaxNode assignStmtNode = isAssignStmt();
+    if (!assignStmtNode.isNull()) {
+        node.addChild(assignStmtNode);
         return node;
     }
     // <Exp>
-    else {
-        setIdx(_idx - 1);
-        SyntaxNode expNode = isExp();
-        if (expNode.isNull()) {
-            return {};
-        }
+    SyntaxNode expNode = isExp();
+    if (!expNode.isNull()) {
         node.addChild(expNode);
-        // ';'
-        if (!isSemicn()) {
-            return {};
-        }
+        return node;
     }
-    return node;
+    setIdx(idx_ori);
+    return {};
 }
 
 /*
  * <IfStmt> → 'if' '(' <Cond> ')' <Stmt> [ 'else' <Stmt> ]
  */
 SyntaxNode Parser::isIfStmt() {
+    int idx_ori = _idx;
     SyntaxNode node("<IfStmt>");
     // 'if'
     if (!isIfTk()) {
@@ -125,39 +130,33 @@ SyntaxNode Parser::isIfStmt() {
     }
     // '('
     if (!isLParent()) {
+        setIdx(idx_ori);
         return {};
     }
     // <Cond>
     SyntaxNode condNode = isCond();
     if (condNode.isNull()) {
+        setIdx(idx_ori);
         return {};
     }
     node.addChild(condNode);
     // ')'
     if (!isRParent()) {
+        setIdx(idx_ori);
         return {};
     }
     // <Stmt>
     SyntaxNode stmtNode = isStmt();
     if (stmtNode.isNull()) {
+        setIdx(idx_ori);
         return {};
     }
     node.addChild(stmtNode);
     // is token 'else'
-    if (!setIdx(_idx + 1)) {
-        return {};
-    }
-    if (!_token.isElseTk()) {
-        setIdx(_idx - 1);
-    }
-    else {
-        // 'else'
-        if (!isElseTk()) {
-            return {};
-        }
-        // <Stmt>
+    if (isElseTk()) {
         stmtNode = isStmt();
         if (stmtNode.isNull()) {
+            setIdx(idx_ori);
             return {};
         }
         node.addChild(stmtNode);
@@ -169,28 +168,34 @@ SyntaxNode Parser::isIfStmt() {
  * <WhileStmt> → 'while' '(' <Cond> ')' <Stmt>
  */
 SyntaxNode Parser::isWhileStmt() {
+    int idx_ori = _idx;
     SyntaxNode node("<WhileStmt>");
     // 'while'
     if (!isWhileTk()) {
+        setIdx(idx_ori);
         return {};
     }
     // '('
     if (!isLParent()) {
+        setIdx(idx_ori);
         return {};
     }
     // <Cond>
     SyntaxNode condNode = isCond();
     if (condNode.isNull()) {
+        setIdx(idx_ori);
         return {};
     }
     node.addChild(condNode);
     // ')'
     if (!isRParent()) {
+        setIdx(idx_ori);
         return {};
     }
     // <Stmt>
     SyntaxNode stmtNode = isStmt();
     if (stmtNode.isNull()) {
+        setIdx(idx_ori);
         return {};
     }
     node.addChild(stmtNode);
@@ -201,55 +206,65 @@ SyntaxNode Parser::isWhileStmt() {
  * <BreakStmt> → 'break' ';'
  */
 SyntaxNode Parser::isBreakStmt() {
+    int idx_ori = _idx;
     SyntaxNode node("<BreakStmt>");
     // 'break'
     if (!isBreakTk()) {
+        setIdx(idx_ori);
         return {};
     }
     // ';'
     if (!isSemicn()) {
-        return {};
-    }
-    return node;
-}
-/*
- * <BreakStmt> → 'continue' ';'
- */
-SyntaxNode Parser::isContinueStmt() {
-    SyntaxNode node("<ContinueStmt>");
-    // 'continue'
-    if (!isContinueTk()) {
-        return {};
-    }
-    // ';'
-    if (!isSemicn()) {
+        setIdx(idx_ori);
         return {};
     }
     return node;
 }
 
 /*
- * <ReturnStmt> → [Exp] ';'
+ * <ContinueStmt> → 'continue' ';'
  */
-SyntaxNode Parser::isReturnStmt() {
-    SyntaxNode node("<ReturnStmt>");
-    if (!setIdx(_idx + 1)) {
+SyntaxNode Parser::isContinueStmt() {
+    int idx_ori = _idx;
+    SyntaxNode node("<ContinueStmt>");
+    // 'continue'
+    if (!isContinueTk()) {
+        setIdx(idx_ori);
         return {};
     }
-    if (_token.isSemicn()) {
+    // ';'
+    if (!isSemicn()) {
+        setIdx(idx_ori);
+        return {};
+    }
+    return node;
+}
+
+/*
+ * <ReturnStmt> → 'return' [Exp] ';'
+ */
+SyntaxNode Parser::isReturnStmt() {
+    int idx_ori = _idx;
+    SyntaxNode node("<ReturnStmt>");
+    if (!isReturnTk()) {
+        setIdx(idx_ori);
+        return {};
+    }
+    if (isSemicn()) {
         return node;
     }
-    else {
-        setIdx(_idx - 1);
-        SyntaxNode expNode = isExp();
-        if (expNode.isNull()) {
-            return {};
-        }
-        node.addChild(expNode);
-        if (!isSemicn()) {
-            return {};
-        }
+    // <Exp>
+    SyntaxNode expNode = isExp();
+    if (expNode.isNull()) {
+        setIdx(idx_ori);
+        return {};
     }
+    // ';'
+    if (!isSemicn()) {
+        setIdx(idx_ori);
+        return {};
+    }
+    node.addChild(expNode);
     return node;
 }
 
@@ -257,25 +272,30 @@ SyntaxNode Parser::isReturnStmt() {
  * <AssignStmt> → <LVal> '=' <Exp> ';'
  */
 SyntaxNode Parser::isAssignStmt() {
+    int idx_ori = _idx;
     SyntaxNode node("<AssignStmt>");
     // <LVal>
     SyntaxNode lValNode = isLVal();
     if (lValNode.isNull()) {
+        setIdx(idx_ori);
         return {};
     }
     node.addChild(lValNode);
     // '='
     if (!isAssign()) {
+        setIdx(idx_ori);
         return {};
     }
     // <Exp>
     SyntaxNode expNode = isExp();
     if (expNode.isNull()) {
+        setIdx(idx_ori);
         return {};
     }
     node.addChild(expNode);
     // ';'
     if (!isSemicn()) {
+        setIdx(idx_ori);
         return {};
     }
     return node;
@@ -285,40 +305,43 @@ SyntaxNode Parser::isAssignStmt() {
  * <PrintfStmt> → 'printf''('<FormatString>{','Exp}')'';'
  */
 SyntaxNode Parser::isPrintfStmt() {
+    int idx_ori = _idx;
     SyntaxNode node("<PrintfStmt>");
     // 'printf'
     if (!isPrintfTk()) {
+        setIdx(idx_ori);
         return {};
     }
     // '('
     if (!isLParent()) {
+        setIdx(idx_ori);
         return {};
     }
     // <FormatString>
     SyntaxNode formatStringNode = isFormatString();
     if (formatStringNode.isNull()) {
+        setIdx(idx_ori);
         return {};
     }
     node.addChild(formatStringNode);
     // {','Exp}
-    if (!setIdx(_idx + 1)) {
-        return {};
-    }
-    while (_token.isComma()) {
+    while (isComma()) {
         // <Exp>
         SyntaxNode expNode = isExp();
         if (expNode.isNull()) {
+            setIdx(idx_ori);
             return {};
         }
         node.addChild(expNode);
     }
-    setIdx(_idx - 1);
     // ')'
     if (!isRParent()) {
+        setIdx(idx_ori);
         return {};
     }
     // ';'
     if (!isSemicn()) {
+        setIdx(idx_ori);
         return {};
     }
     return node;
@@ -364,30 +387,33 @@ SyntaxNode Parser::isScanfStmt() {
     return node;
 }
 
-
 /*
  * <ThreadFuncDef> → 'Thread' '(' <FuncDef> ')' 
  */
 SyntaxNode Parser::isThreadFuncDef(){
+    int idx_ori = _idx;
     SyntaxNode node("<ThreadFuncDef>");
     // 'Thread'
     if (!isThreadTk()) {
+        setIdx(idx_ori);
         return {};
     }
     // '('
     if (!isLParent()) {
+        setIdx(idx_ori);
         return {};
     }
     // <FuncDef>
     SyntaxNode funcDefNode = isFuncDef();
     if (funcDefNode.isNull()) {
+        setIdx(idx_ori);
         return {};
     }
     node.addChild(funcDefNode);
     // ')'
     if (!isRParent()) {
+        setIdx(idx_ori);
         return {};
     }
     return node;
-
 }

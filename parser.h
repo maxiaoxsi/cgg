@@ -81,6 +81,7 @@ private:
     bool isIntTk();
     bool isMainTk();
     bool isConstTk();
+    bool isReturnTk();
     bool isThreadTk();
     bool isStrCon();
     bool isEql();
