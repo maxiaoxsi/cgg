@@ -16,7 +16,8 @@ enum typeId {
     LSS, LEQ, GRE, GEQ, EQL, NEQ, // compares
     OR, AND, NOT, // logic ops
     ASSIGN, SEMICN, COMMA,
-    LPARENT, RPARENT, LBRACK, RBRACK, LBRACE, RBRACE //brackets
+    LPARENT, RPARENT, LBRACK, RBRACK, LBRACE, RBRACE, //brackets
+    THREAD
 };
 
 class LexToken {
