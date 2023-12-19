@@ -12,46 +12,46 @@ SyntaxNode Parser::isFuncDef() {
     SyntaxNode node("<FuncDef>");
     // 'func'
     if (!isFuncTk()) {
-        _idx = idx_ori;
+        setIdx(idx_ori);
         return {};
     }
     // <Ident>
     SyntaxNode identNode = isIdent();
     if (identNode.isNull()) {
-        _idx = idx_ori;
+        setIdx(idx_ori);
         return {};
     }
     node.addChild(identNode);
     // '('
     if (!isLParent()) {
-        _idx = idx_ori;
+        setIdx(idx_ori);
         return {};
     }
     // [FuncFParams]
     if (!isRParent()) {
         SyntaxNode funcFParamsNode = isFuncFParams();
         if (funcFParamsNode.isNull()) {
-            _idx = idx_ori;
+            setIdx(idx_ori);
             return {};
         }
         node.addChild(funcFParamsNode);
         // ')'
         if (!isRParent()) {
-            _idx = idx_ori;
+            setIdx(idx_ori);
             return {};
         }
     }
     // <FuncType>
     SyntaxNode funcTypeNode = isFuncType();
     if (funcTypeNode.isNull()) {
-        _idx = idx_ori;
+        setIdx(idx_ori);
         return {};
     }
     node.addChild(funcTypeNode);
     // <Block>
     SyntaxNode blockNode = isBlock();
     if (blockNode.isNull()) {
-        _idx = idx_ori;
+        setIdx(idx_ori);
         return {};
     }
     node.addChild(blockNode);
@@ -69,7 +69,7 @@ SyntaxNode Parser::isFuncFParams() {
         // <FuncFParam>
         SyntaxNode FuncFParam = isFuncFParam();
         if (FuncFParam.isNull()) {
-            _idx = idx_ori;
+            setIdx(idx_ori);
             return {};
         }
         node.addChild(FuncFParam);
@@ -86,13 +86,13 @@ SyntaxNode Parser::isFuncFParam() {
     // <Ident>
     SyntaxNode identNode = isIdent();
     if (identNode.isNull()) {
-        _idx = idx_ori;
+        setIdx(idx_ori);
         return {};
     }
     node.addChild(identNode);
     // is token '[', 'BType' or 'func'
     if (!setIdx(_idx + 1)) {
-        _idx = idx_ori;
+        setIdx(idx_ori);
         return {};
     }
     if (_token.isBType()) {
@@ -100,7 +100,7 @@ SyntaxNode Parser::isFuncFParam() {
         // <FuncFVarParam>
         SyntaxNode funcFVarParamNode = isFuncFVarParam();
         if (funcFVarParamNode.isNull()) {
-            _idx = idx_ori;
+            setIdx(idx_ori);
             return {};
         }
         node.addChild(funcFVarParamNode);
@@ -110,7 +110,7 @@ SyntaxNode Parser::isFuncFParam() {
         // <FuncFArrayParam>
         SyntaxNode funcFArrayParamNode = isFuncFArrayParam();
         if (funcFArrayParamNode.isNull()) {
-            _idx = idx_ori;
+            setIdx(idx_ori);
             return {};
         }
         node.addChild(funcFArrayParamNode);
@@ -120,7 +120,7 @@ SyntaxNode Parser::isFuncFParam() {
         // <FuncFFuncParam>
         SyntaxNode funcFFuncParamNode = isFuncFFuncParam();
         if (funcFFuncParamNode.isNull()) {
-            _idx = idx_ori;
+            setIdx(idx_ori);
             return {};
         }
         node.addChild(funcFFuncParamNode);
@@ -138,7 +138,7 @@ SyntaxNode Parser::isFuncFVarParam() {
     // <BType>
     SyntaxNode bTypeNode = isBType();
     if (bTypeNode.isNull()) {
-        _idx = idx_ori;
+        setIdx(idx_ori);
         return {};
     }
     node.addChild(bTypeNode);
@@ -154,12 +154,12 @@ SyntaxNode Parser::isFuncFArrayParam() {
     SyntaxNode node("<FuncFArrayParam>");
     // '['
     if (!isLBrack()) {
-        _idx = idx_ori;
+        setIdx(idx_ori);
         return {};
     }
     // ']'
     if (!isRBrack()) {
-        _idx = idx_ori;
+        setIdx(idx_ori);
         return {};
     }
     // { '[' ConstExp ']' }
@@ -172,14 +172,14 @@ SyntaxNode Parser::isFuncFArrayParam() {
         }
         node.addChild(constExpNode);
         if (!isRBrack()) {
-            _idx = idx_ori;
+            setIdx(idx_ori);
             return {};
         }
     }
     // <BType>
     SyntaxNode bTypeNode = isBType();
     if (bTypeNode.isNull()) {
-        _idx = idx_ori;
+        setIdx(idx_ori);
         return {};
     }
     node.addChild(bTypeNode);
@@ -195,7 +195,7 @@ SyntaxNode Parser::isFuncFFuncParam() {
     SyntaxNode node("<FuncFFuncParam>");
     // '('
     if (!isLParent()) {
-        _idx = idx_ori;
+        setIdx(idx_ori);
         return {};
     }
     // is token <BType>
@@ -203,20 +203,20 @@ SyntaxNode Parser::isFuncFFuncParam() {
         do {
             SyntaxNode bTypeNode = isBType();
             if (bTypeNode.isNull()) {
-                _idx = idx_ori;
+                setIdx(idx_ori);
                 return {};
             }
             node.addChild(bTypeNode);
         } while (isComma());
         if (!isRParent()) {
-            _idx = idx_ori;
+            setIdx(idx_ori);
             return {};
         }
     }
     // <BType>
     SyntaxNode bTypeNode = isBType();
     if (bTypeNode.isNull()) {
-        _idx = idx_ori;
+        setIdx(idx_ori);
         return {};
     }
     node.addChild(bTypeNode);

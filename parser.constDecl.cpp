@@ -12,13 +12,13 @@ SyntaxNode Parser::isConstDecl(bool isGlobal) {
     SyntaxNode node("<ConstDecl>");
     // 'const'
     if (!isConstTk()) {
-        _idx = idx_ori;
+        setIdx(idx_ori);
         return {};
     }
     // <BType>
     SyntaxNode bTypeNode = isBType();
     if (bTypeNode.isNull()) {
-        _idx = idx_ori;
+        setIdx(idx_ori);
         return {};
     }
     node.addChild(bTypeNode);
@@ -33,7 +33,7 @@ SyntaxNode Parser::isConstDecl(bool isGlobal) {
     } while(isComma());
     // ';'
     if (!isSemicn()) {
-        _idx = idx_ori;
+        setIdx(idx_ori);
         return {};
     }
     return node;
@@ -48,7 +48,7 @@ SyntaxNode Parser::isConstDef() {
     // <Ident>
     SyntaxNode identNode = isIdent();
     if (identNode.isNull()) {
-        _idx = idx_ori;
+        setIdx(idx_ori);
         return {};
     }
     node.addChild(identNode);
@@ -57,7 +57,7 @@ SyntaxNode Parser::isConstDef() {
         // <ConstExp>
         SyntaxNode constExpNode = isConstExp();
         if (constExpNode.isNull()) {
-            _idx = idx_ori;
+            setIdx(idx_ori);
             return {};
         }
         node.addChild(constExpNode);
@@ -69,7 +69,7 @@ SyntaxNode Parser::isConstDef() {
     }
     // '='
     if (!isAssign()) {
-        _idx = idx_ori;
+        setIdx(idx_ori);
         return {};
     }
     // <ConstInitVal>
@@ -92,7 +92,7 @@ SyntaxNode Parser::isConstInitVal() {
         // <ConstExp>
         SyntaxNode constExpNode = isConstExp();
         if (constExpNode.isNull()) {
-            _idx = idx_ori;
+            setIdx(idx_ori);
             return {};
         }
         node.addChild(constExpNode);
@@ -107,13 +107,13 @@ SyntaxNode Parser::isConstInitVal() {
         // <ConstInitVal>
         SyntaxNode constInitVarNode = isConstInitVal();
         if (constInitVarNode.isNull()) {
-            _idx = idx_ori;
+            setIdx(idx_ori);
             return {};
         }
         node.addChild(constInitVarNode);
     } while(isComma());
     if (!isRBrace()) {
-        _idx = idx_ori;
+        setIdx(idx_ori);
         return {};
     }
     return node;
@@ -123,12 +123,12 @@ SyntaxNode Parser::isConstInitVal() {
  * <ConstExp> → <AddExp>
  */
 SyntaxNode Parser::isConstExp() {
-    int idx_ori = _idx;
+    setIdx(idx_ori);
     SyntaxNode node("<ConstExp>");
     // <AddExp>
     SyntaxNode addExpNode = isAddExp();
     if (addExpNode.isNull()) {
-        _idx = idx_ori;
+        setIdx(idx_ori);
         return {};
     }
     node.addChild(addExpNode);

@@ -184,6 +184,9 @@ bool LexToken::isElseTk() {
     return _typeEnum == ELSETK;
 }
 
+bool LexToken::isThreadTk() {
+    return _typeEnum == THREAD;
+}
 bool LexToken::isStrCon() {
     return _typeEnum == STRCON;
 }

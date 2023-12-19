@@ -38,6 +38,7 @@ bool Parser::procedure() {
                 return false;
             }
             root.addChild(constDeclNode);
+            setIdx(_idx + 1);
             continue;
         }
         if (_token.isBType()) {
@@ -48,6 +49,7 @@ bool Parser::procedure() {
                 return false;
             }
             root.addChild(varDeclNode);
+            setIdx(_idx + 1);
             continue;
         }
         if (_token.isFuncTk()) {
@@ -93,7 +95,7 @@ SyntaxNode Parser::isBType() {
         return {};
     }
     if (!_token.isBType()) {
-        _idx = idx_ori;
+        setIdx(idx_ori);
         return {};
     }
     std::string typeStr = _token.typeStr();
@@ -146,14 +148,14 @@ SyntaxNode Parser::isBlock() {
     SyntaxNode node("<Block>");
     // '{'
     if (!isLBrace()) {
-        _idx = idx_ori;
+        setIdx(idx_ori);
         return {};
     }
     // { <BlockItem> } '}'
     while (!isRBrace()) {
         SyntaxNode blockItemNode = isBlockItem();
         if (blockItemNode.isNull()) {
-            _idx = idx_ori;
+            setIdx(idx_ori);
             return {};
         }
         node.addChild(blockItemNode);

@@ -12,7 +12,7 @@ SyntaxNode Parser::isVarDecl(bool isGlobal) {
     // <BType>
     SyntaxNode bTypeNode = isBType();
     if (bTypeNode.isNull()) {
-        _idx = idx_ori;
+        setIdx(idx_ori);
         return {};
     }
     node.addChild(bTypeNode);
@@ -21,14 +21,14 @@ SyntaxNode Parser::isVarDecl(bool isGlobal) {
         // <VarDef>
         SyntaxNode varDefNode = isVarDef();
         if (varDefNode.isNull()) {
-            _idx = idx_ori;
+            setIdx(idx_ori);
             return {};
         }
         node.addChild(varDefNode);
     } while (isComma());
     // ';'
     if (!isSemicn()) {
-        _idx = idx_ori;
+        setIdx(idx_ori);
         return {};
     }
     return node;
@@ -43,16 +43,16 @@ SyntaxNode Parser::isVarDef() {
     // <Ident>
     SyntaxNode identNode = isIdent();
     if (identNode.isNull()) {
-        _idx = idx_ori;
+        setIdx(idx_ori);
         return {};
     }
     node.addChild(identNode);
     // { '[' <ConstExp> ']' }
-    while(_token.isLBrack()) {
+    while(isLBrack()) {
         // <ConstExp>
         SyntaxNode constExpNode = isConstExp();
         if (constExpNode.isNull()) {
-            _idx = idx_ori;
+            setIdx(idx_ori);
             return {};
         }
         // ']'
@@ -65,7 +65,7 @@ SyntaxNode Parser::isVarDef() {
         // <InitVal>
         SyntaxNode initValNode = isInitVal();
         if (initValNode.isNull()) {
-            _idx = idx_ori;
+            setIdx(idx_ori);
             return {};
         }
         node.addChild(initValNode);

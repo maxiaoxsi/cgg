@@ -64,6 +64,7 @@ public:
     bool isPrintfTk();
     bool isScanfTk();
     bool isElseTk();
+    bool isThreadTk();
     bool isStrCon();
     bool isNot();
     bool isOr();

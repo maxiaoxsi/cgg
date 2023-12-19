@@ -16,7 +16,7 @@ std::map<std::string, typeId> reservedWordMap =
          {"main", MAINTK}, {"if", IFTK}, {"else", ELSETK}, {"do", DOTK},
          {"while", WHILETK}, {"for", FORTK}, {"scanf", SCANFTK},
          {"printf", PRINTFTK}, {"return", RETURNTK}, {"func", FUNCTK},
-         {"thread", THREAD}};
+         {"Thread", THREAD}};
 
 std::map<char, typeId> operatorMap =
         {{'+', PLUS}, {'-', MINU}, {'*', MULT}, {'/', DIV} , {'%', MOD}};
