@@ -8,7 +8,7 @@ int main(int argc, char **argv) {
     std::cout << "cgg start!" << std::endl;
     std::string fileDir;
     if (argc == 1) {
-        fileDir = "testfiles\\testfile_yc.txt";
+        fileDir = "../testfile.txt";
     }
     else if (argc == 2) {
         fileDir = argv[1];
