@@ -265,6 +265,7 @@ SyntaxNode Parser::isReturnStmt() {
         return {};
     }
     node.addChild(expNode);
+    returnStmtMidCode(node);
     return node;
 }
 

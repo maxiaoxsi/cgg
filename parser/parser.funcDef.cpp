@@ -55,6 +55,7 @@ SyntaxNode Parser::isFuncDef() {
         return {};
     }
     node.addChild(blockNode);
+    funcDefMidCode(node);
     return node;
 }
 

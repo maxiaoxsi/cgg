@@ -1,8 +1,8 @@
 #include <iostream>
 #include<map>
-#include "dataExplorer.h"
-#include "lexAnalyser.h"
-#include "parser.h"
+#include "dataExplorer/dataExplorer.h"
+#include "lex/lexAnalyser.h"
+#include "parser/parser.h"
 
 int main(int argc, char **argv) {
     std::cout << "cgg start!" << std::endl;

@@ -30,12 +30,14 @@ SyntaxNode Parser::isConstDecl(bool isGlobal) {
             return {};
         }
         node.addChild(constDefNode);
+
     } while(isComma());
     // ';'
     if (!isSemicn()) {
         setIdx(idx_ori);
         return {};
     }
+    constDeclMidCode(node);
     return node;
 }
 
@@ -52,6 +54,7 @@ SyntaxNode Parser::isConstDef() {
         return {};
     }
     node.addChild(identNode);
+    std::vector<int> symbolLength = {};
     // { '[' <ConstExp> ']' }
     while (isLBrack()) {
         // <ConstExp>
@@ -66,6 +69,7 @@ SyntaxNode Parser::isConstDef() {
             _idx = idx_ori;
             return {};
         }
+        symbolLength.push_back(stoi(constExpNode.Con()));
     }
     // '='
     if (!isAssign()) {

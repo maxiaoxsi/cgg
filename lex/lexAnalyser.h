@@ -6,7 +6,7 @@
 #include<iostream>
 #include<fstream>
 #include<vector>
-#include "dataExplorer.h"
+#include "../dataExplorer/dataExplorer.h"
 #define MAXLINE 1024
 
 class LexAnalyser{

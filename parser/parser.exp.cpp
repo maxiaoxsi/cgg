@@ -272,7 +272,7 @@ SyntaxNode Parser::isLVal() {
  * <LOrExp> → <LAndExp> | <LOrExp> '||' <LAndExp>
  */
 SyntaxNode Parser::isLOrExp() {
-    SyntaxNode node("LOrExp");
+    SyntaxNode node("<LOrExp>");
     do {
         // <LAndExp>
         SyntaxNode lAndExpNode = isLAndExp();
@@ -293,7 +293,7 @@ SyntaxNode Parser::isLOrExp() {
  * <LAndExp> → <EqExp> | <LAndExp> '&&' <EqExp>
  */
 SyntaxNode Parser::isLAndExp() {
-    SyntaxNode node("LAndExp");
+    SyntaxNode node("<LAndExp>");
     do {
         SyntaxNode eqExpNode = isEqExp();
         if (eqExpNode.isNull()) {

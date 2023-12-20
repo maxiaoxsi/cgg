@@ -31,6 +31,7 @@ SyntaxNode Parser::isVarDecl(bool isGlobal) {
         setIdx(idx_ori);
         return {};
     }
+    varDeclMidCode(node);
     return node;
 }
 

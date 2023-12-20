@@ -7,7 +7,7 @@
 #include<cctype>
 #include<sstream>
 #include "lexAnalyser.h"
-#include "dataExplorer.h"
+#include "../dataExplorer/dataExplorer.h"
 
 enum typeId _tokenType;
 
