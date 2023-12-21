@@ -1,3 +1,6 @@
 cmake-build-debug/
 .idea/
+.vscode/
 build/
+__pycache__/
+*.spec

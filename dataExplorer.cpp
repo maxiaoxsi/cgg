@@ -4,6 +4,7 @@
 
 #include "dataExplorer.h"
 #include <utility>
+#include <fstream>
 
 extern std::vector<LexToken> tokenList = {};
 
@@ -233,25 +234,28 @@ void SyntaxNode::addChild(SyntaxNode node) {
     _children.push_back(node);
 }
 
-void SyntaxNode::println(int depth) {
+void SyntaxNode::println(int depth, bool end, std::string &out) {
     for (int i = 0; i < depth; i++) {
         std::cout << "  ";
+        out += "  ";
     }
     if (_con == "") {
         std::cout << _label << std::endl;
+        out += _label + "\n";
         return;
     }
     std::cout << _label << ": " << _con << std::endl;
+    out += _label + ": " + _con + "\n";
 }
 
 void SyntaxNode::setCon(std::string con) {
     _con = con;
 }
 
-void SyntaxNode::printTree(int depth) {
-    println(depth);
+void SyntaxNode::printTree(int depth, bool end, std::string &out) {
+    println(depth, end, out);
     for (int i = 0; i < _children.size(); i++) {
-        _children[i].printTree(depth + 1);
+         _children[i].printTree(depth + 1, end, out);
     }
 }
 

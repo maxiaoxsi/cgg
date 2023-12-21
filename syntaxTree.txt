@@ -1,0 +1,122 @@
+<CompUnit>
+  <MainFuncDef>
+    <FuncType>
+    <Block>
+      <BlockItem>
+        <VarDecl>
+          <BType>: INT
+          <VarDef>
+            <Ident>: a
+            <InitVal>
+              <Exp>
+                <AddExp>
+                  <MulExp>
+                    <UnaryExp>
+                      <PrimaryExp>
+                        <Number>
+                          <IntConst>: 1
+      <BlockItem>
+        <VarDecl>
+          <BType>: INT
+          <VarDef>
+            <Ident>: b
+            <InitVal>
+              <Exp>
+                <AddExp>
+                  <MulExp>
+                    <UnaryExp>
+                      <PrimaryExp>
+                        <Number>
+                          <IntConst>: 2
+      <BlockItem>
+        <VarDecl>
+          <BType>: INT
+          <VarDef>
+            <Ident>: c
+            <InitVal>
+              <Exp>
+                <AddExp>
+                  <MulExp>
+                    <UnaryExp>
+                      <PrimaryExp>
+                        <Number>
+                          <IntConst>: 3
+      <BlockItem>
+        <VarDecl>
+          <BType>: INT
+          <VarDef>
+            <Ident>: d
+            <InitVal>
+              <Exp>
+                <AddExp>
+                  <MulExp>
+                    <UnaryExp>
+                      <PrimaryExp>
+                        <Number>
+                          <IntConst>: 4
+      <BlockItem>
+        <Stmt>
+          <IfStmt>
+            <Cond>
+              LOrExp
+                LAndExp
+                  <EqExp>
+                    <RelEqp>
+                      <AddExp>
+                        <MulExp>
+                          <UnaryExp>
+                            <PrimaryExp>
+                              <LVal>
+                                <Ident>: a
+                    <RelEqp>
+                      <AddExp>
+                        <MulExp>
+                          <UnaryExp>
+                            <PrimaryExp>
+                              <Number>
+                                <IntConst>: 1
+            <Stmt>
+              <Block>
+                <BlockItem>
+                  <Stmt>
+                    <IfStmt>
+                      <Cond>
+                        LOrExp
+                          LAndExp
+                            <EqExp>
+                              <RelEqp>
+                                <AddExp>
+                                  <MulExp>
+                                    <UnaryExp>
+                                      <PrimaryExp>
+                                        <LVal>
+                                          <Ident>: d
+                              <RelEqp>
+                                <AddExp>
+                                  <MulExp>
+                                    <UnaryExp>
+                                      <PrimaryExp>
+                                        <Number>
+                                          <IntConst>: 4
+                      <Stmt>
+                        <Block>
+                          <BlockItem>
+                            <Stmt>
+                              <ReturnStmt>
+                                <Exp>
+                                  <AddExp>
+                                    <MulExp>
+                                      <UnaryExp>
+                                        <PrimaryExp>
+                                          <Number>
+                                            <IntConst>: 1
+      <BlockItem>
+        <Stmt>
+          <ReturnStmt>
+            <Exp>
+              <AddExp>
+                <MulExp>
+                  <UnaryExp>
+                    <PrimaryExp>
+                      <Number>
+                        <IntConst>: 0

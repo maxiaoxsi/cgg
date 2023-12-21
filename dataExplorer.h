@@ -87,9 +87,9 @@ public:
     explicit SyntaxNode(std::string label);
     SyntaxNode();
     void addChild(SyntaxNode child);
-    void printTree(int depth);
+    void printTree(int depth, bool end, std::string &out);
     void setCon(std::string con);
-    void println(int depth);
+    void println(int depth, bool end, std::string &out);
     bool isNull();
 private:
     std::string _label;
