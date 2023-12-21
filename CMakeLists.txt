@@ -20,4 +20,10 @@ add_executable(cgg main.cpp
         dataExplorer/dataExplorer.symbol.cpp
         midcode/midCode.cpp
         midcode/midCode.stmt.cpp
+        midcode/midCode.exp.cpp
+        midcode/midCode.func.cpp
+        midcode/midCode.constDecl.cpp
+        midcode/midCode.varDecl.cpp
+        dataExplorer/dataExplorer.midCode.cpp
+        dataExplorer/dataExplorer.tempVarPool.cpp
 )

@@ -4,6 +4,12 @@
 #include "lex/lexAnalyser.h"
 #include "parser/parser.h"
 
+void printMidCode() {
+    for (int i = 0; i < midCodeList.size(); i++) {
+        midCodeList[i].println();
+    }
+}
+
 int main(int argc, char **argv) {
     std::cout << "cgg start!" << std::endl;
     std::string fileDir;
@@ -17,7 +23,11 @@ int main(int argc, char **argv) {
     testAnalyser.analyse();
     Parser testParser;
     testParser.procedure();
-    std::cout << "----------------------------------" << std::endl;
+    /*
+    std::cout << "-----------------SyntaxTree----------------------" << std::endl;
     root.printTree();
-    return 0;
+    std::cout << "-----------------MidCode-------------------------" << std::endl;
+    printMidCode();
+    */
+     return 0;
 }

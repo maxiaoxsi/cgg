@@ -21,6 +21,9 @@ std::map<std::string, typeId> reservedWordMap =
 std::map<char, typeId> operatorMap =
         {{'+', PLUS}, {'-', MINU}, {'*', MULT}, {'/', DIV} , {'%', MOD}};
 
+std::map<std::string, typeId> logicMap =
+        {{"!", NOT}, {"&&", AND}, {"||", OR}};
+
 std::map<char, typeId> bracketMap =
         {{'(', LPARENT}, {')', RPARENT} ,{'[', LBRACK} ,
          {']', RBRACK}, {'{', LBRACE}, {'}', RBRACE}};
@@ -81,6 +84,15 @@ int LexAnalyser::getToken() {
     }
     if (isAssign()) {
         return getAssignSym();
+    }
+    if (isNot()) {
+        return getNotSym();
+    }
+    if (isAnd()) {
+        return getAndSym();
+    }
+    if (isOr()) {
+        return getOrSym();
     }
     return -1;
 }
@@ -191,6 +203,15 @@ void LexAnalyser::putToken(typeId type) {
         case ELSETK:
             putToken("ELSETK", ELSETK);
             break;
+        case NOT:
+            putToken("NOT", NOT);
+            break;
+        case AND:
+            putToken("AND", AND);
+            break;
+        case OR:
+            putToken("OR", OR);
+            break;
         case DOTK:
             putToken("DOTK", DOTK);
             break;
@@ -287,6 +308,18 @@ bool LexAnalyser::isLss() const {
     return (_ch == '<');
 }
 
+bool LexAnalyser::isNot() const {
+    return (_ch == '!');
+}
+
+bool LexAnalyser::isAnd() const {
+    return (_ch == '&');
+}
+
+bool LexAnalyser::isOr() const {
+    return (_ch == '|');
+}
+
 bool LexAnalyser::isGre() const {
     return (_ch == '>');
 }
@@ -322,6 +355,45 @@ int LexAnalyser::getUnarySym() {
         return 0;
     }
     return 1;
+}
+
+int LexAnalyser::getNotSym() {
+    catCh();
+    getCh();
+    if (isAssign()) {
+        catCh();
+        _tokenType = NEQ;
+    } else {
+        retractCh();
+        _tokenType = NOT;
+    }
+    return 0;
+}
+
+int LexAnalyser::getAndSym() {
+    catCh();
+    getCh();
+    if (isAnd()) {
+        catCh();
+        _tokenType = AND;
+    } else {
+        retractCh();
+        return -1;
+    }
+    return 0;
+}
+
+int LexAnalyser::getOrSym() {
+    catCh();
+    getCh();
+    if (isOr()) {
+        catCh();
+        _tokenType = OR;
+    } else {
+        retractCh();
+        return -1;
+    }
+    return 0;
 }
 
 int LexAnalyser::getLssCompareSym() {

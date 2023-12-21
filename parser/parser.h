@@ -1,5 +1,5 @@
 //
-// Created by 77902 on 2023/11/21.
+// Created by maxiaoxsi on 2023/11/21.
 //
 
 #ifndef CGG_PARSER_H
@@ -94,8 +94,14 @@ private:
     bool isMul();
     bool setIdx(int idx);
     bool constDeclMidCode(SyntaxNode constDeclNode);
+    std::string constInitValMidCode(SyntaxNode constInitValNode);
+    std::string constExpMidCode(SyntaxNode constExpNode);
     bool constDefMidCode(SyntaxNode constDefNode, std::string type);
     bool varDeclMidCode(SyntaxNode varDeclNode);
+    bool funcDefMidCode(SyntaxNode funcDefNode);
+    bool funcFParamsMidCode(SyntaxNode funcFParamsNode);
+    bool funFParamMidCode(SyntaxNode funcFParamNode);
+    bool funcRParamsMidCode(SyntaxNode funcRParamsNode);
     std::string initValMidCode(SyntaxNode initValNode);
     std::string expMidCode(SyntaxNode expNode);
     std::string addExpMidCode(SyntaxNode addExpNode);
@@ -105,6 +111,9 @@ private:
     std::string lValMidCode(SyntaxNode lValNode);
     std::string identMidCode(SyntaxNode identNode);
     std::string numberMidCode(SyntaxNode numberNode);
+    std::string funcTypeMidCode(SyntaxNode funcTypeNode);
+    std::string bTypeMidCode(SyntaxNode bTypeNode);
+    std::string funcFVarParamMidCode(SyntaxNode funcFVarParamNode);
     operation addOpMidCode(SyntaxNode addOpNode);
     operation mulOpMidCode(SyntaxNode mulOpNode);
     operation unaryOpMidCode(SyntaxNode unaryOpNode);
@@ -112,16 +121,9 @@ private:
     bool returnStmtMidCode(SyntaxNode returnStmtNode);
     //bool funcDefMidCode(SyntaxNode funcDefNode);
     int _idx;
-    int _temp_idx;
-    std::string allocTempVar() {
-        std::string ans = "t" + std::to_string(_temp_idx);
-        _temp_idx++;
-    }
-    void freeTempVar() {
-        _temp_idx--;
-    }
     LexToken _token;
     SymbolTable curSymbolTable;
+    TempVarPool _tempPool;
 };
 
 

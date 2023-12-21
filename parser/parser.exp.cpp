@@ -1,5 +1,5 @@
 //
-// Created by 77902 on 2023/12/14.
+// Created by maxiaoxsi on 2023/12/14.
 //
 
 #include "parser.h"
@@ -371,7 +371,7 @@ SyntaxNode Parser::isCharConst() {
         _idx = ori_idx;
         return {};
     }
-    node.setCon(_token.tokenCon());
+    node.setCon(std::to_string(_token.tokenCon()[0]));
     return node;
 }
 

@@ -1,5 +1,5 @@
 //
-// Created by mxx on 2023/11/21.
+// Created by maxiaoxsi on 2023/11/21.
 //
 
 #include "parser.h"
@@ -7,7 +7,7 @@
 
 Parser::Parser() {
     setIdx(0);
-    _temp_idx = 0;
+    _tempPool = TempVarPool();
 }
 
 bool Parser::setIdx(int idx) {

@@ -1,5 +1,5 @@
 //
-// Created by 77902 on 2023/11/22.
+// Created by maxiaoxsi on 2023/11/22.
 //
 
 #include "dataExplorer.h"
@@ -287,5 +287,4 @@ SyntaxNode SyntaxNode::child(int idx) {
     }
     return _children[idx];
 }
-
 

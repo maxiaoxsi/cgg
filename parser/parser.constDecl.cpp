@@ -1,5 +1,5 @@
 //
-// Created by mxx on 2023/12/14.
+// Created by maxiaoxsi on 2023/12/14.
 //
 
 #include "parser.h"
@@ -85,6 +85,7 @@ SyntaxNode Parser::isConstDef() {
     node.addChild(constDefVarNode);
     return node;
 }
+
 
 /*
  * <ConstInitVal> → <ConstExp> | '{' [ <ConstInitVal> { ',' <ConstInitVal> } ] '}'

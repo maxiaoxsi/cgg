@@ -1,5 +1,5 @@
 //
-// Created by 77902 on 2023/11/22.
+// Created by maxiaoxsi on 2023/11/22.
 //
 
 #ifndef CGG_DATAEXPLORER_H
@@ -23,11 +23,7 @@ enum typeId {
 
 enum operation {
     DEFAULT,// default
-    PLUSOP, // +
-    MINUOP, // -
-    MULTOP, // *
-    DIVOP,  // /
-    MOBOP,  // %
+    PLUSOP, MINUOP, MULTOP, DIVOP, MOBOP,  // operators
     LSSOP,  //<
     LEQOP,  //<=
     GREOP,  //>
@@ -140,14 +136,28 @@ private:
 
 class MidCode {         //z = x op y
 public:
+    MidCode(operation op, std::string z, std::string x, std::string y);
+    void println();
+    void printOp();
+    void printOp(std::string strOp);
+private:
     operation _op;      // 操作
     std::string _z;     // 结果
     std::string _x;     // 左操作数
     std::string _y;     // 右操作数
-    MidCode(operation op, std::string z, std::string x, std::string y) : _op(op), _z(z), _x(x), _y(y) {}
 };
 
 class Symbol {
+public:
+    std::string Name();
+    std::string Kind();
+    std::string Type();
+    std::vector<int> Length();
+    Symbol(std::string name, int addr, std::string kind, std::string type, int constInt,
+           char constChar, std::vector<int> length);
+    Symbol();
+    void println();
+    int arrayMulY(int idx);
 private:
     std::string _name;
     std::string _kind; //"VAR" "CONST" "FUNC" "ARRAY" "ARRAY"
@@ -157,16 +167,6 @@ private:
     std::vector<int> _length;  //数组长度  对于函数用于记录这个函数有多少变量（参数+局部变量+临时)
     std::vector<std::string> _parameterTable;  //参数类型
     int _addr;   //地址
-public:
-    std::string Name();
-    std::string Kind();
-    std::string Type();
-    std::vector<int> Length();
-
-    Symbol(std::string name, int addr, std::string kind, std::string type, int constInt,
-           char constChar, std::vector<int> length);
-    Symbol();
-    void println();
 };
 
 class SymbolTable{
@@ -180,6 +180,19 @@ public:
 private:
     std::map<std::string, Symbol> _table;
     std::vector<SymbolTable>  _parent;
+};
+
+class TempVarPool{
+public:
+    TempVarPool();
+    std::string allocTempVar();
+    std::string genTempVar(int idx);
+    void freeTempVar(std::string tempVar);
+private:
+    int _num = 0;
+    int _idx = 0;
+    int _size = 0;
+    std::vector<int> _tempPool;
 };
 
 extern std::vector<LexToken> tokenList;
