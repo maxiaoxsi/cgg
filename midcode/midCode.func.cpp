@@ -7,7 +7,7 @@
 /*
  * <FuncDef> → 'func' <Ident> '(' [FuncFParams] ')' <FuncType> <Block>
  * funcFParamsMidCode
- * func  funcName '' type
+ * func funcName funcType ""
  */
 bool Parser::funcDefMidCode(SyntaxNode funcDefNode) {
     SyntaxNode identNode = funcDefNode.child(0);
@@ -19,6 +19,16 @@ bool Parser::funcDefMidCode(SyntaxNode funcDefNode) {
     if (funcFParamsNode.Label() == "<FuncFParams>") {
         funcFParamsMidCode(funcFParamsNode);
     }
+    SyntaxNode blockNode = funcDefNode.child(funcDefNode.size() - 1);
+    blockMidCode(blockNode);
+    return true;
+}
+
+/*
+ * <MainFuncDef> → 'func' 'main' '(' ')' <FuncType> <Block>
+ */
+bool Parser::mainFuncDefMidCode(SyntaxNode mainFuncDefNode) {
+
     return true;
 }
 

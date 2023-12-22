@@ -10,10 +10,6 @@ SymbolTable::SymbolTable() {
 
 }
 
-SymbolTable::SymbolTable(const SymbolTable &parent) {
-    _parent.push_back(parent);
-}
-
 bool SymbolTable::addItem(std::string name, int addr, std::string kind, std::string type, int constInt,
                           char constChar, std::vector<int> length) {
     if (_table.find(name) == _table.end()) {
@@ -35,6 +31,10 @@ Symbol SymbolTable::item(std::string target) {
         return _parent[0].item(target);
     }
     return _table[target];
+}
+
+void SymbolTable::setParent(SymbolTable parent) {
+    _parent.push_back(parent);
 }
 
 Symbol::Symbol(std::string name, int addr, std::string kind, std::string type, int constInt,

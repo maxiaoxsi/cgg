@@ -23,11 +23,9 @@ int main(int argc, char **argv) {
     testAnalyser.analyse();
     Parser testParser;
     testParser.procedure();
-    /*
     std::cout << "-----------------SyntaxTree----------------------" << std::endl;
     root.printTree();
     std::cout << "-----------------MidCode-------------------------" << std::endl;
     printMidCode();
-    */
-     return 0;
+    return 0;
 }

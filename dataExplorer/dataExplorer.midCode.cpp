@@ -66,8 +66,14 @@ void MidCode::printOp() {
         case BNZ:   //满足条件跳转
             printOp("BNZ");
             break;
-        case PUSH:
+        case PUSH: //函数传参
             printOp("PUSH");
+            break;
+        case CALL: // 函数调用
+            printOp("CALL");
+            break;
+        case RET: // 函数返回
+            printOp("RET");
             break;
         case RETVALUE: //有返回值函数返回的结果
             printOp("RETVALUE");

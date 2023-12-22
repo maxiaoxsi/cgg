@@ -21,7 +21,6 @@ std::string Parser::expMidCode(SyntaxNode expNode) {
 std::string Parser::addExpMidCode(SyntaxNode addExpNode) {
     SyntaxNode mulExpNode = addExpNode.child(0);
     std::string mulTemp1 = mulExpMidCode(mulExpNode);
-    //std::cout << mulTemp1 << std::endl;
     for (int i = 1; i < addExpNode.size(); i += 2) {
         SyntaxNode addOpNode = addExpNode.child(i);
         SyntaxNode mulExpNode2 = addExpNode.child(i + 1);
@@ -103,8 +102,21 @@ std::string Parser::unaryExpMidCode(SyntaxNode unaryExpNode) {
     }
     else if (node.Label() == "<UnaryOp>") {
         operation midCodeOp = unaryOpMidCode(node);
-        SyntaxNode unaryExpNodeC = unaryExpNode.child(1);
-        std::string midCodeY = unaryExpMidCode(unaryExpNodeC);
+        SyntaxNode unaryExpNode2 = unaryExpNode.child(1);
+        std::string midCodeY = unaryExpMidCode(unaryExpNode2);
+        if (isdigit(midCodeY[0])) {
+            if (midCodeOp == PLUSOP) {
+                return midCodeY;
+            }
+            else if (midCodeOp == MINUOP) {
+                midCodeY = std::to_string(-std::stoi(midCodeY));
+                return midCodeY;
+            }
+            else if (midCodeOp == NOTOP) {
+                midCodeY = std::to_string(!std::stoi(midCodeY));
+                return midCodeY;
+            }
+        }
         std::string midCodeZ = _tempPool.allocTempVar();
         midCodeList.push_back(MidCode(midCodeOp, midCodeZ, "0", midCodeY));
         if (midCodeY[0] == '~') {
@@ -133,7 +145,7 @@ std::string Parser::primaryExpMidCode(SyntaxNode primaryExpNode) {
     else if (node.Label() == "<LVal>") {
         return lValMidCode(node);
     }
-    else if (node.Label() == "Number") {
+    else if (node.Label() == "<Number>") {
         return numberMidCode(node);
     }
     return "";
@@ -143,60 +155,80 @@ std::string Parser::primaryExpMidCode(SyntaxNode primaryExpNode) {
  * <LVal> → <Ident> {'[' <Exp> ']'}
  * identName
  * or
- * GETARRAY identName idx ""
+ * GETARRAY tempvar identName idx
+ *
  */
 std::string Parser::lValMidCode(SyntaxNode lValNode) {
     SyntaxNode identNode = lValNode.child(0);
+    std::string getarrayX = identMidCode(identNode);
+    Symbol symbol = curSymbolTable.item(getarrayX);
     std::string midCodeX = identMidCode(identNode);
-    Symbol symbol = curSymbolTable.item(midCodeX);
     if (symbol.Kind() == "ARRAY") {
         std::vector<int> length = symbol.Length();
-        SyntaxNode expNode = lValNode.child(lValNode.size() - 1);
-        std::string addX = expMidCode(expNode);
-        for (int i = 1; i < lValNode.size() - 1; i++) {
-            SyntaxNode expNode = lValNode.child(i);
-            std::string mulX = expMidCode(expNode);
-            std::string addY = "0";
-            if (isdigit(mulX[0])) {
-                addY = std::stoi(mulX) * symbol.arrayMulY(i - 1);
-            }
-            else {
-                std::string mulZ = _tempPool.allocTempVar();
-                std::string mulY = std::to_string(symbol.arrayMulY(i - 1));
-                midCodeList.push_back(MidCode(MULTOP, mulZ, mulX, mulY));
-                if (mulX[0] == '~') {
-                    _tempPool.freeTempVar(mulX);
-                }
-                addY = mulZ;
-            }
-            std::string addZ = "0";
-            if (isdigit(addX[0]) && isdigit(addY[0])) {
-                addZ = std::to_string(std::stoi(addX) + std::stoi(addY));
-            }
-            else {
-                addZ = _tempPool.allocTempVar();
-                midCodeList.push_back(MidCode(PLUSOP, addZ, addX, addY));
-                if (addX[0] == '~') {
-                    _tempPool.freeTempVar(addX);
-                }
-                if (addY[0] == '~') {
-                    _tempPool.freeTempVar(addY);
-                }
-            }
-            addX = addZ;
+        std::string getarrayY = lValIdxMidCode(lValNode);
+        std::string getarrayZ = _tempPool.allocTempVar();
+        midCodeList.push_back(MidCode(GETARRAY, getarrayZ, getarrayX, getarrayY));
+        if (getarrayX[0] == '~') {
+            _tempPool.freeTempVar(getarrayX);
         }
-        midCodeList.push_back(MidCode(GETARRAY, symbol.Name(), addX, ""));
-        if (addX[0] == '~') {
-            _tempPool.freeTempVar(addX);
-        }
-        return addX;
+        return getarrayZ;
     }
     // var
-    else {
-        return symbol.Name();
-    }
-    return "";
+    return lValIdentMidCode(lValNode);
 }
+
+/*
+ * <LVal> → <Ident> {'[' <Exp> ']'}
+ */
+std::string Parser::lValIdentMidCode(SyntaxNode lValNode) {
+    SyntaxNode identNode = lValNode.child(0);
+    return identMidCode(identNode);
+}
+
+/*
+ * <LVal> → <Ident> {'[' <Exp> ']'}
+ */
+std::string Parser::lValIdxMidCode(SyntaxNode lValNode) {
+    SyntaxNode identNode = lValNode.child(0);
+    std::string identCon = identMidCode(identNode);
+    SyntaxNode expNode = lValNode.child(lValNode.size() - 1);
+    Symbol symbol = curSymbolTable.item(identCon);
+    std::string addX = expMidCode(expNode);
+    for (int i = 1; i < lValNode.size() - 1; i++) {
+        SyntaxNode expNode = lValNode.child(i);
+        std::string mulX = expMidCode(expNode);
+        std::string addY = "0";
+        if (isdigit(mulX[0])) {
+            addY = std::stoi(mulX) * symbol.arrayMulY(i - 1);
+        }
+        else {
+            std::string mulZ = _tempPool.allocTempVar();
+            std::string mulY = std::to_string(symbol.arrayMulY(i - 1));
+            midCodeList.push_back(MidCode(MULTOP, mulZ, mulX, mulY));
+            if (mulX[0] == '~') {
+                _tempPool.freeTempVar(mulX);
+            }
+            addY = mulZ;
+        }
+        std::string addZ = "0";
+        if (isdigit(addX[0]) && isdigit(addY[0])) {
+            addZ = std::to_string(std::stoi(addX) + std::stoi(addY));
+        }
+        else {
+            addZ = _tempPool.allocTempVar();
+            midCodeList.push_back(MidCode(PLUSOP, addZ, addX, addY));
+            if (addX[0] == '~') {
+                _tempPool.freeTempVar(addX);
+            }
+            if (addY[0] == '~') {
+                _tempPool.freeTempVar(addY);
+            }
+        }
+        addX = addZ;
+    }
+    return addX;
+}
+
 
 /*
  * <AddOp> → '+' | '−'

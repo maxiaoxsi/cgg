@@ -39,7 +39,6 @@ bool Parser::procedure() {
                 return false;
             }
             root.addChild(constDeclNode);
-            setIdx(_idx + 1);
             continue;
         }
         if (_token.isBType()) {
@@ -50,7 +49,6 @@ bool Parser::procedure() {
                 return false;
             }
             root.addChild(varDeclNode);
-            setIdx(_idx + 1);
             continue;
         }
         if (_token.isFuncTk()) {
@@ -124,7 +122,7 @@ SyntaxNode Parser::isIdent() {
  * <FuncRParams> → <Exp> { ',' <Exp> }
  */
 SyntaxNode Parser::isFuncRParams() {
-    SyntaxNode node("<FuncRParams");
+    SyntaxNode node("<FuncRParams>");
     do {
         // <Exp>
         SyntaxNode expNode = isExp();
@@ -146,8 +144,6 @@ SyntaxNode Parser::isFuncRParams() {
  */
 SyntaxNode Parser::isBlock() {
     int idx_ori = _idx;
-    SymbolTable blockTable(curSymbolTable);
-    curSymbolTable = blockTable;
     SyntaxNode node("<Block>");
     // '{'
     if (!isLBrace()) {
@@ -163,7 +159,6 @@ SyntaxNode Parser::isBlock() {
         }
         node.addChild(blockItemNode);
     }
-    curSymbolTable = curSymbolTable.parentTable();
     return node;
 }
 

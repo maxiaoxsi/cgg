@@ -99,9 +99,15 @@ private:
     bool constDefMidCode(SyntaxNode constDefNode, std::string type);
     bool varDeclMidCode(SyntaxNode varDeclNode);
     bool funcDefMidCode(SyntaxNode funcDefNode);
+    bool mainFuncDefMidCode(SyntaxNode mainFuncDefNode);
     bool funcFParamsMidCode(SyntaxNode funcFParamsNode);
     bool funFParamMidCode(SyntaxNode funcFParamNode);
     bool funcRParamsMidCode(SyntaxNode funcRParamsNode);
+    bool blockMidCode(SyntaxNode blockNode);
+    bool blockItemMidCode(SyntaxNode blockItemNode);
+    bool stmtMidCode(SyntaxNode stmtMidCode);
+    bool assignStmtMidCode(SyntaxNode assignStmtNode);
+    bool returnStmtMidCode(SyntaxNode returnStmtNode);
     std::string initValMidCode(SyntaxNode initValNode);
     std::string expMidCode(SyntaxNode expNode);
     std::string addExpMidCode(SyntaxNode addExpNode);
@@ -109,6 +115,8 @@ private:
     std::string unaryExpMidCode(SyntaxNode unaryExpNode);
     std::string primaryExpMidCode(SyntaxNode primaryExpNode);
     std::string lValMidCode(SyntaxNode lValNode);
+    std::string lValIdentMidCode(SyntaxNode lValNode);
+    std::string lValIdxMidCode(SyntaxNode lValNode);
     std::string identMidCode(SyntaxNode identNode);
     std::string numberMidCode(SyntaxNode numberNode);
     std::string funcTypeMidCode(SyntaxNode funcTypeNode);
@@ -118,7 +126,6 @@ private:
     operation mulOpMidCode(SyntaxNode mulOpNode);
     operation unaryOpMidCode(SyntaxNode unaryOpNode);
     bool varDefMidCode(SyntaxNode varDefNode, std::string type);
-    bool returnStmtMidCode(SyntaxNode returnStmtNode);
     //bool funcDefMidCode(SyntaxNode funcDefNode);
     int _idx;
     LexToken _token;

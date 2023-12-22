@@ -172,10 +172,10 @@ private:
 class SymbolTable{
 public:
     SymbolTable();
-    SymbolTable(SymbolTable const &parent);
     bool addItem(std::string name, int addr, std::string kind, std::string type, int constInt,
                  char constChar, std::vector<int> length);
     SymbolTable parentTable();
+    void setParent(SymbolTable parent);
     Symbol item(std::string target);
 private:
     std::map<std::string, Symbol> _table;

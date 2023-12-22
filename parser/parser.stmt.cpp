@@ -4,7 +4,7 @@
 
 #include "parser.h"
 /*
- * <Stmt> → <AssignStmt> | [Exp] ';' | <Block> | <IfStmt> | <WhileStmt> | <BreakStmt> | <ContinueStmt>
+ * <Stmt> → <AssignStmt> | [<Exp>] ';' | <Block> | <IfStmt> | <WhileStmt> | <BreakStmt> | <ContinueStmt>
  * | <ReturnStmt> | <PrintfStmt> | <ScanfStmt>
  */
 SyntaxNode Parser::isStmt() {
@@ -265,7 +265,6 @@ SyntaxNode Parser::isReturnStmt() {
         return {};
     }
     node.addChild(expNode);
-    returnStmtMidCode(node);
     return node;
 }
 
