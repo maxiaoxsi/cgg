@@ -119,12 +119,14 @@ public:
     explicit SyntaxNode(std::string label);
     SyntaxNode();
     void addChild(SyntaxNode child);
-    void printTree();
+    //void printTree();
+    void printTree(int depth, bool end, std::string &out);
     void setCon(std::string con);
     std::string Con();
     std::string Label();
     int constNumber();
-    void println();
+    //void println();
+    void println(int depth, bool end, std::string &out);
     bool isNull();
     int size();
     SyntaxNode child(int idx);
