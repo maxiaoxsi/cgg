@@ -291,5 +291,3 @@ std::string Parser::numberMidCode(SyntaxNode numberNode) {
     return numberNode.child(0).Con();
 }
 
-
-

@@ -38,7 +38,7 @@ bool Parser::stmtMidCode(SyntaxNode stmtMidCode) {
         returnStmtMidCode(node);
     }
     else if (node.Label() == "<PrintfStmt>") {
-        //printfStmtMidCode(node);
+        printfStmtMidCode(node);
     }
     else if (node.Label() == "<ScanfStmt>") {
         //scanfStmtMidCode(node);
@@ -91,4 +91,39 @@ bool Parser::returnStmtMidCode(SyntaxNode returnStmtNode) {
         }
     }
     return true;
+}
+
+/*
+ * <PrintfStmt> → 'printf''('<FormatString>{','Exp}')'';'
+ */
+bool Parser::printfStmtMidCode(SyntaxNode printfStmtNode) {
+    SyntaxNode formatStringNode = printfStmtNode.child(0);
+    int idx = 1;
+    std::string formatStringCon = formatStringMidCode(formatStringNode);
+    int pos;
+    while ((pos = formatStringCon.find('%')) != -1) {
+        if (pos > 0) {
+            std::string printZ = "\"" + formatStringCon.substr(0, pos) + "\"";
+            midCodeList.push_back(MidCode(PRINT, printZ, "", ""));
+        }
+        formatStringCon = formatStringCon.substr(pos + 2, formatStringCon.size());
+        SyntaxNode expNode = printfStmtNode.child(idx++);
+        std::string printZ = expMidCode(expNode);
+        midCodeList.push_back(MidCode(PRINT, printZ, "", ""));
+        if (printZ[0] == '~') {
+            _tempPool.freeTempVar(printZ);
+        }
+    }
+    if (formatStringCon != "") {
+        std::string printZ = "\"" + formatStringCon + "\"";
+        midCodeList.push_back(MidCode(PRINT, printZ, "", ""));
+    }
+    return false;
+}
+
+/*
+ * <FormatString> -> '"' {<char>} '"'
+ */
+std::string Parser::formatStringMidCode(SyntaxNode formatStringNode) {
+    return formatStringNode.Con();
 }

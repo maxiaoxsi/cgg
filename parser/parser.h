@@ -108,6 +108,8 @@ private:
     bool stmtMidCode(SyntaxNode stmtMidCode);
     bool assignStmtMidCode(SyntaxNode assignStmtNode);
     bool returnStmtMidCode(SyntaxNode returnStmtNode);
+    bool printfStmtMidCode(SyntaxNode printfStmtNode);
+    std::string formatStringMidCode(SyntaxNode formatStringNode);
     std::string initValMidCode(SyntaxNode initValNode);
     std::string expMidCode(SyntaxNode expNode);
     std::string addExpMidCode(SyntaxNode addExpNode);
