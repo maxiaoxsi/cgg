@@ -1,0 +1,37 @@
+<CompUnit>
+  <ConstDecl>
+    <BType>: INT
+    <ConstDef>
+      <Ident>: const1
+      <ConstInitVal>
+        <ConstExp>
+          <AddExp>
+            <MulExp>
+              <UnaryExp>
+                <PrimaryExp>
+                  <Number>
+                    <IntConst>: 1
+    <ConstDef>
+      <Ident>: const2
+      <ConstInitVal>
+        <ConstExp>
+          <AddExp>
+            <MulExp>
+              <UnaryExp>
+                <UnaryOp>: -
+                <UnaryExp>
+                  <PrimaryExp>
+                    <Number>
+                      <IntConst>: 100
+  <VarDecl>
+    <BType>: CHAR
+    <VarDef>
+      <Ident>: const3
+      <InitVal>
+        <Exp>
+          <AddExp>
+            <MulExp>
+              <UnaryExp>
+                <PrimaryExp>
+                  <Number>
+                    <CharConst>: 95

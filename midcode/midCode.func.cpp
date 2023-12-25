@@ -28,7 +28,6 @@ bool Parser::funcDefMidCode(SyntaxNode funcDefNode) {
  * <MainFuncDef> → 'func' 'main' '(' ')' <FuncType> <Block>
  */
 bool Parser::mainFuncDefMidCode(SyntaxNode mainFuncDefNode) {
-
     return true;
 }
 

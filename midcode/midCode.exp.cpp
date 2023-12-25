@@ -229,7 +229,6 @@ std::string Parser::lValIdxMidCode(SyntaxNode lValNode) {
     return addX;
 }
 
-
 /*
  * <AddOp> → '+' | '−'
  */
