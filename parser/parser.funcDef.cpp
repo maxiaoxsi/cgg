@@ -135,7 +135,7 @@ SyntaxNode Parser::isFuncFParam() {
 
 SyntaxNode Parser::isFuncFVarParam() {
     int idx_ori = _idx;
-    SyntaxNode node("<FuncFParamVar>");
+    SyntaxNode node("<FuncFVarParam>");
     // <BType>
     SyntaxNode bTypeNode = isBType();
     if (bTypeNode.isNull()) {
@@ -279,5 +279,6 @@ SyntaxNode Parser::isMainFuncDef() {
         return {};
     }
     node.addChild(blockNode);
+    mainFuncDefMidCode(node);
     return node;
 }

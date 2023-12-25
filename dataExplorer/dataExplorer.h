@@ -119,11 +119,13 @@ public:
     explicit SyntaxNode(std::string label);
     SyntaxNode();
     void addChild(SyntaxNode child);
+    //void printTree();
     void printTree(int depth, bool end, std::string &out);
     void setCon(std::string con);
     std::string Con();
     std::string Label();
     int constNumber();
+    //void println();
     void println(int depth, bool end, std::string &out);
     bool isNull();
     int size();
@@ -172,10 +174,10 @@ private:
 class SymbolTable{
 public:
     SymbolTable();
-    SymbolTable(SymbolTable const &parent);
     bool addItem(std::string name, int addr, std::string kind, std::string type, int constInt,
                  char constChar, std::vector<int> length);
     SymbolTable parentTable();
+    void setParent(SymbolTable parent);
     Symbol item(std::string target);
 private:
     std::map<std::string, Symbol> _table;
