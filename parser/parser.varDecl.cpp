@@ -1,5 +1,5 @@
 //
-// Created by mxx on 2023/12/14.
+// Created by maxiaoxsi on 2023/12/14.
 //
 #include "parser.h"
 
@@ -31,6 +31,7 @@ SyntaxNode Parser::isVarDecl(bool isGlobal) {
         setIdx(idx_ori);
         return {};
     }
+    varDeclMidCode(node);
     return node;
 }
 

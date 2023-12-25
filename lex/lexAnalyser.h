@@ -6,7 +6,7 @@
 #include<iostream>
 #include<fstream>
 #include<vector>
-#include "dataExplorer.h"
+#include "../dataExplorer/dataExplorer.h"
 #define MAXLINE 1024
 
 class LexAnalyser{
@@ -30,7 +30,7 @@ private:
     int getToken();
     void putToken(typeId type);
     void putToken(const std::string& type, typeId typeEnum);
-    void addToken();
+    bool isNot() const;
     bool isEOF() const;
     bool isBlank() const;
     bool isAlpha() const;
@@ -43,6 +43,8 @@ private:
     bool isAssign() const;
     bool isLss() const;
     bool isGre() const;
+    bool isAnd() const;
+    bool isOr() const;
     bool isSquo() const;
     bool isDquo() const;
     bool isChar() const;
@@ -53,6 +55,9 @@ private:
     int getLssCompareSym();
     int getGreCompareSym();
     int getAssignSym();
+    int getNotSym();
+    int getAndSym();
+    int getOrSym();
     int getCharSym();
     int getStringSym();
     void clearToken();

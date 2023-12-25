@@ -1,5 +1,5 @@
 //
-// Created by mxx on 2023/12/14.
+// Created by maxiaoxsi on 2023/12/14.
 //
 
 #include "parser.h"
@@ -55,6 +55,7 @@ SyntaxNode Parser::isFuncDef() {
         return {};
     }
     node.addChild(blockNode);
+    funcDefMidCode(node);
     return node;
 }
 
@@ -277,7 +278,6 @@ SyntaxNode Parser::isMainFuncDef() {
         setIdx(idx_ori);
         return {};
     }
-    // blockNode.setCon(_token.tokenCon());
     node.addChild(blockNode);
     return node;
 }

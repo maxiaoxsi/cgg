@@ -1,11 +1,11 @@
 //
-// Created by 77902 on 2023/11/21.
+// Created by maxiaoxsi on 2023/11/21.
 //
 
 #ifndef CGG_PARSER_H
 #define CGG_PARSER_H
 
-#include "dataExplorer.h"
+#include "../dataExplorer/dataExplorer.h"
 
 class Parser {
 public:
@@ -93,8 +93,37 @@ private:
     bool isAdd();
     bool isMul();
     bool setIdx(int idx);
+    bool constDeclMidCode(SyntaxNode constDeclNode);
+    std::string constInitValMidCode(SyntaxNode constInitValNode);
+    std::string constExpMidCode(SyntaxNode constExpNode);
+    bool constDefMidCode(SyntaxNode constDefNode, std::string type);
+    bool varDeclMidCode(SyntaxNode varDeclNode);
+    bool funcDefMidCode(SyntaxNode funcDefNode);
+    bool funcFParamsMidCode(SyntaxNode funcFParamsNode);
+    bool funFParamMidCode(SyntaxNode funcFParamNode);
+    bool funcRParamsMidCode(SyntaxNode funcRParamsNode);
+    std::string initValMidCode(SyntaxNode initValNode);
+    std::string expMidCode(SyntaxNode expNode);
+    std::string addExpMidCode(SyntaxNode addExpNode);
+    std::string mulExpMidCode(SyntaxNode mulExpNode);
+    std::string unaryExpMidCode(SyntaxNode unaryExpNode);
+    std::string primaryExpMidCode(SyntaxNode primaryExpNode);
+    std::string lValMidCode(SyntaxNode lValNode);
+    std::string identMidCode(SyntaxNode identNode);
+    std::string numberMidCode(SyntaxNode numberNode);
+    std::string funcTypeMidCode(SyntaxNode funcTypeNode);
+    std::string bTypeMidCode(SyntaxNode bTypeNode);
+    std::string funcFVarParamMidCode(SyntaxNode funcFVarParamNode);
+    operation addOpMidCode(SyntaxNode addOpNode);
+    operation mulOpMidCode(SyntaxNode mulOpNode);
+    operation unaryOpMidCode(SyntaxNode unaryOpNode);
+    bool varDefMidCode(SyntaxNode varDefNode, std::string type);
+    bool returnStmtMidCode(SyntaxNode returnStmtNode);
+    //bool funcDefMidCode(SyntaxNode funcDefNode);
     int _idx;
     LexToken _token;
+    SymbolTable curSymbolTable;
+    TempVarPool _tempPool;
 };
 
 

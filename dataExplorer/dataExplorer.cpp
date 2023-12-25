@@ -1,14 +1,17 @@
 //
-// Created by 77902 on 2023/11/22.
+// Created by maxiaoxsi on 2023/11/22.
 //
 
 #include "dataExplorer.h"
 #include <utility>
-#include <fstream>
 
 extern std::vector<LexToken> tokenList = {};
 
 extern SyntaxNode root("<CompUnit>");
+
+extern std::vector<MidCode> midCodeList = {};
+
+
 
 LexToken::LexToken() {
 
@@ -261,5 +264,37 @@ void SyntaxNode::printTree(int depth, bool end, std::string &out) {
 
 bool SyntaxNode::isNull() {
     return _label == "";
+}
+
+std::string SyntaxNode::Con() {
+    if (_con != "") {
+        return _con;
+    }
+    for (int i = 0; i < _children.size(); i++) {
+        std::string tempCon = _children[i].Con();
+        if (_children[i].Con() != "") {
+            return tempCon;
+        }
+    }
+    return "";
+}
+
+std::string SyntaxNode::Label() {
+    return _label;
+}
+
+int SyntaxNode::constNumber() {
+    return stoi(Con());
+}
+
+int SyntaxNode::size() {
+    return _children.size();
+}
+
+SyntaxNode SyntaxNode::child(int idx) {
+    if (idx >= _children.size()) {
+        return {};
+    }
+    return _children[idx];
 }
 

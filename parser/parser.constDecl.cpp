@@ -1,5 +1,5 @@
 //
-// Created by mxx on 2023/12/14.
+// Created by maxiaoxsi on 2023/12/14.
 //
 
 #include "parser.h"
@@ -30,12 +30,14 @@ SyntaxNode Parser::isConstDecl(bool isGlobal) {
             return {};
         }
         node.addChild(constDefNode);
+
     } while(isComma());
     // ';'
     if (!isSemicn()) {
         setIdx(idx_ori);
         return {};
     }
+    constDeclMidCode(node);
     return node;
 }
 
@@ -52,6 +54,7 @@ SyntaxNode Parser::isConstDef() {
         return {};
     }
     node.addChild(identNode);
+    std::vector<int> symbolLength = {};
     // { '[' <ConstExp> ']' }
     while (isLBrack()) {
         // <ConstExp>
@@ -66,6 +69,7 @@ SyntaxNode Parser::isConstDef() {
             _idx = idx_ori;
             return {};
         }
+        symbolLength.push_back(stoi(constExpNode.Con()));
     }
     // '='
     if (!isAssign()) {
@@ -81,6 +85,7 @@ SyntaxNode Parser::isConstDef() {
     node.addChild(constDefVarNode);
     return node;
 }
+
 
 /*
  * <ConstInitVal> → <ConstExp> | '{' [ <ConstInitVal> { ',' <ConstInitVal> } ] '}'
@@ -124,7 +129,6 @@ SyntaxNode Parser::isConstInitVal() {
  */
 SyntaxNode Parser::isConstExp() {
     int idx_ori = _idx;
-    setIdx(idx_ori);
     SyntaxNode node("<ConstExp>");
     // <AddExp>
     SyntaxNode addExpNode = isAddExp();

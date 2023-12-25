@@ -1,5 +1,5 @@
 //
-// Created by 77902 on 2023/12/15.
+// Created by maxiaoxsi on 2023/12/15.
 //
 
 #include "parser.h"
@@ -265,6 +265,7 @@ SyntaxNode Parser::isReturnStmt() {
         return {};
     }
     node.addChild(expNode);
+    returnStmtMidCode(node);
     return node;
 }
 

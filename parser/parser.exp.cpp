@@ -1,5 +1,5 @@
 //
-// Created by 77902 on 2023/12/14.
+// Created by maxiaoxsi on 2023/12/14.
 //
 
 #include "parser.h"
@@ -272,7 +272,7 @@ SyntaxNode Parser::isLVal() {
  * <LOrExp> → <LAndExp> | <LOrExp> '||' <LAndExp>
  */
 SyntaxNode Parser::isLOrExp() {
-    SyntaxNode node("LOrExp");
+    SyntaxNode node("<LOrExp>");
     do {
         // <LAndExp>
         SyntaxNode lAndExpNode = isLAndExp();
@@ -293,7 +293,7 @@ SyntaxNode Parser::isLOrExp() {
  * <LAndExp> → <EqExp> | <LAndExp> '&&' <EqExp>
  */
 SyntaxNode Parser::isLAndExp() {
-    SyntaxNode node("LAndExp");
+    SyntaxNode node("<LAndExp>");
     do {
         SyntaxNode eqExpNode = isEqExp();
         if (eqExpNode.isNull()) {
@@ -371,7 +371,7 @@ SyntaxNode Parser::isCharConst() {
         _idx = ori_idx;
         return {};
     }
-    node.setCon(_token.tokenCon());
+    node.setCon(std::to_string(_token.tokenCon()[0]));
     return node;
 }
 

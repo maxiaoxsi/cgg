@@ -1,12 +1,13 @@
 //
-// Created by mxx on 2023/11/21.
+// Created by maxiaoxsi on 2023/11/21.
 //
 
 #include "parser.h"
-#include "dataExplorer.h"
+#include "../dataExplorer/dataExplorer.h"
 
 Parser::Parser() {
     setIdx(0);
+    _tempPool = TempVarPool();
 }
 
 bool Parser::setIdx(int idx) {
@@ -104,7 +105,7 @@ SyntaxNode Parser::isBType() {
 }
 
 /*
- * lex IDENFR>
+ * lex IDENFR
  */
 SyntaxNode Parser::isIdent() {
     SyntaxNode node("<Ident>");
@@ -145,6 +146,8 @@ SyntaxNode Parser::isFuncRParams() {
  */
 SyntaxNode Parser::isBlock() {
     int idx_ori = _idx;
+    SymbolTable blockTable(curSymbolTable);
+    curSymbolTable = blockTable;
     SyntaxNode node("<Block>");
     // '{'
     if (!isLBrace()) {
@@ -160,6 +163,7 @@ SyntaxNode Parser::isBlock() {
         }
         node.addChild(blockItemNode);
     }
+    curSymbolTable = curSymbolTable.parentTable();
     return node;
 }
 
@@ -230,6 +234,3 @@ SyntaxNode Parser::isFormatString() {
     node.setCon(_token.tokenCon());
     return node;
 }
-
-
-
